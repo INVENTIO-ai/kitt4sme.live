@@ -225,9 +225,9 @@ spec:
         - name: data-volume
           mountPath: /storage
           subPath: storage
-        resources:
-          limits:
-            nvidia.com/gpu: 1
+        # resources:
+        #   limits:
+        #     nvidia.com/gpu: 1
         
       - name: reverseproxy
         image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
