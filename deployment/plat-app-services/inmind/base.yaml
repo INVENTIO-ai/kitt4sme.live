@@ -1,17 +1,129 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: inmind
-  name: inmind
+  name: quick-anomaly
 spec:
+  type: NodePort
   ports:
-  - name: http
-    port: 35332
+  - port: 35342
+    targetPort: 35342
+    nodePort: 35342
     protocol: TCP
-    targetPort: 8000
   selector:
-    app: inmind
+    app: quick-anomaly
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: reverseproxy
+spec:
+  type: NodePort
+  ports:
+  - port: 35332
+    targetPort: 80
+    nodePort: 35332
+    protocol: TCP
+  selector:
+    app: reverseproxy
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  type: NodePort
+  ports:
+  - port: 35336
+    targetPort: 5432
+    nodePort: 35336
+    protocol: TCP
+  selector:
+    app: db
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-red
+spec:
+  type: NodePort
+  ports:
+  - port: 35335
+    targetPort: 1880
+    nodePort: 35335
+    protocol: TCP
+  selector:
+    app: node-red
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: localbroker-mqtt
+spec:
+  type: NodePort
+  ports:
+  - port: 35333
+    targetPort: 1883
+    nodePort: 35333
+    protocol: TCP
+  selector:
+    app: localbroker
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: localbroker-ws
+spec:
+  type: NodePort
+  ports:
+  - port: 35334
+    targetPort: 8000
+    nodePort: 35334
+    protocol: TCP
+  selector:
+    app: localbroker
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: licence-manager-gui
+spec:
+  type: NodePort
+  ports:
+  - port: 35340
+    targetPort: 80
+    nodePort: 35340
+    protocol: TCP
+  selector:
+    app: licence-manager-gui
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dockermonitoring
+spec:
+  type: NodePort
+  ports:
+  - port: 35350
+    targetPort: 9000
+    nodePort: 35350
+    protocol: TCP
+  selector:
+    app: dockermonitoring
+
 
 ---
 
@@ -32,12 +144,104 @@ spec:
         app: inmind
     spec:
       containers:
-        - image: "ghcr.io/c0c0n3/kitt4sme.roughnator:latest"
-          imagePullPolicy: IfNotPresent
-          name: inmind
-          ports:
-          - containerPort: 8000
-            name: http
-          env:
-          - name: "ORION_BASE_URL"
-            value: "http://orion:1026"
+      - name: quick-anomaly
+        image: inventio.azurecr.io/modules/quick-anomaly-torch-onnx-x86-cuda-113:dev
+        ports:
+        - containerPort: 35342
+        volumeMounts:
+        - name: storage-volume
+          mountPath: /storage
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+            
+      - name: reverseproxy
+        image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
+        ports:
+        - containerPort: 80
+        - containerPort: 81
+        volumeMounts:
+        - name: serversdata-volume
+          mountPath: /serversdata
+
+      - name: db
+        image: inventio.azurecr.io/core/db:dev
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: db-data-volume
+          mountPath: /var/lib/postgresql/data
+
+      - name: node-red
+        image: inventio.azurecr.io/core/flow:dev
+        ports:
+        - containerPort: 1880
+        volumeMounts:
+        - name: data-volume
+          mountPath: /opt/data/
+
+      - name: localbroker
+        image: inventio.azurecr.io/core/brokermosquitto:dev
+        ports:
+        - containerPort: 1883
+        - containerPort: 8000
+        volumeMounts:
+        - name: log-volume
+          mountPath: /mosquitto/log
+
+      - name: mainapi
+        image: inventio.azurecr.io/core/api:dev
+        ports:
+        - containerPort: 5001
+        volumeMounts:
+        - name: log-volume
+          mountPath: /log
+        - name: data-volume
+          mountPath: /data
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+
+      - name: dockermonitoring
+        image: inventio.azurecr.io/core/dockermonitoring:dev
+        ports:
+        - containerPort: 8000
+        - containerPort: 9443
+        - containerPort: 9000
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+
+      - name: licence-manager-gui
+        image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
+        ports:
+        - containerPort: 80
+
+      - name: licence-manager-api
+        image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
+        ports:
+        - containerPort: 5002
+        - containerPort: 5003
+        volumeMounts:
+        - name: licence-volume
+          mountPath: /licence
+        - name: data-volume
+          mountPath: /data
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+
+      volumes:
+      - name: licence-volume
+        hostPath:
+          path: /home/azureuser/inmindfolder/LicenceVolume-x86
+      - name: data-volume
+        hostPath:
+          path: /home/azureuser/inmindfolder/DataVolume
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: db-data-volume
+        hostPath:
+          path: /home/azureuser/inmindfolder/DataVolume/db/postgres-data
+      - name: storage-volume
+        hostPath:
+          path: /home/azureuser/inmindfolder/DataVolume/Storage
