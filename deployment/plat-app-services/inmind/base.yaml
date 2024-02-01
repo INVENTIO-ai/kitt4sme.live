@@ -34,7 +34,7 @@ spec:
       containers:
         - image: "ghcr.io/c0c0n3/kitt4sme.roughnator:latest"
           imagePullPolicy: IfNotPresent
-          name: roughnator
+          name: inmind
           ports:
           - containerPort: 8000
             name: http
