@@ -29,7 +29,7 @@ Cluster Bootstrap
 
 ### Introduction
 
-Hello. In this page you will find the basic content to make your AI solution part of the [KITT4SME](https://github.com/c0c0n3/kitt4sme/blob/master/arch/intro/motivation.md) platform. Additionally you will find links to the rest of the documentation with more details for each topic.
+Hello. In this page you will find the basic content to make your AI solution part of the [KITT4SME](https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/intro/motivation.md) platform. Additionally you will find links to the rest of the documentation with more details for each topic.
 
 The things you have to do are the following:
 
@@ -53,7 +53,7 @@ There are some things that you must know, before you star working with the KITT4
 
 ### Technical questions discussion board.
 
-The platform that we are going use is the Github discussions board. The board can be found here https://github.com/c0c0n3/kitt4sme.live/discussions
+The platform that we are going use is the Github discussions board. The board can be found here https://github.com/INVENTIO-ai/kitt4sme.live/discussions
 
 **The board is public so be careful what you ask! So please avoid including private business information in your questions.**
 
@@ -181,13 +181,13 @@ Let's break down the request above:
 
 For more, study the following:
 
-- [https://github.com/c0c0n3/kitt4sme/blob/master/arch/fw-middleware/ngsi-services.md](https://github.com/c0c0n3/kitt4sme/blob/master/arch/fw-middleware/ngsi-services.md)
+- [https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/fw-middleware/ngsi-services.md](https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/fw-middleware/ngsi-services.md)
 
-- [https://github.com/c0c0n3/kitt4sme/blob/master/arch/fw-middleware/ctx-change-propagation.md](https://github.com/c0c0n3/kitt4sme/blob/master/arch/fw-middleware/ctx-change-propagation.md)
+- [https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/fw-middleware/ctx-change-propagation.md](https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/fw-middleware/ctx-change-propagation.md)
 
-- [https://github.com/c0c0n3/kitt4sme/blob/master/arch/fw-middleware/time-series.md](https://github.com/c0c0n3/kitt4sme/blob/master/arch/fw-middleware/time-series.md)
+- [https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/fw-middleware/time-series.md](https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/fw-middleware/time-series.md)
 
-- [https://github.com/c0c0n3/kitt4sme.live/blob/main/docs/ngsi-persistence.md](https://github.com/c0c0n3/kitt4sme.live/blob/main/docs/ngsi-persistence.md)
+- [https://github.com/INVENTIO-ai/kitt4sme.live/blob/main/docs/ngsi-persistence.md](https://github.com/INVENTIO-ai/kitt4sme.live/blob/main/docs/ngsi-persistence.md)
 
 - [https://www.fiware.org/](https://www.fiware.org/)
 
@@ -263,11 +263,11 @@ additional metadata fields to provide an accuracy rating for the measured temper
 
 For more, study the following:
 
-- [https://github.com/c0c0n3/kitt4sme/blob/master/arch/fw-middleware/data.md](https://github.com/c0c0n3/kitt4sme/blob/master/arch/fw-middleware/data.md)
+- [https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/fw-middleware/data.md](https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/fw-middleware/data.md)
 
-- [https://github.com/c0c0n3/kitt4sme.roughnator/blob/main/roughnator/ngsy.py](https://github.com/c0c0n3/kitt4sme.roughnator/blob/main/roughnator/ngsy.py)
+- [https://github.com/INVENTIO-ai/kitt4sme.roughnator/blob/main/roughnator/ngsy.py](https://github.com/INVENTIO-ai/kitt4sme.roughnator/blob/main/roughnator/ngsy.py)
 
-- [KITT4SME existing NGSI payloads](https://github.com/c0c0n3/kitt4sme.live/issues/72#issuecomment-1019972046)
+- [KITT4SME existing NGSI payloads](https://github.com/INVENTIO-ai/kitt4sme.live/issues/72#issuecomment-1019972046)
 
 - [https://fiware-tutorials.readthedocs.io/en/stable/getting-started/](https://fiware-tutorials.readthedocs.io/en/stable/getting-started/)
 
@@ -277,7 +277,7 @@ For more, study the following:
 The Roughnator is a live simulator that simulates a live environment like the one of the KITT4SME cluster.
 Before running your solution, you can run the Roughnator, to understand more how the stripped down version works
 
-[https://github.com/c0c0n3/kitt4sme.roughnator/](https://github.com/c0c0n3/kitt4sme.roughnator/)
+[https://github.com/INVENTIO-ai/kitt4sme.roughnator/](https://github.com/INVENTIO-ai/kitt4sme.roughnator/)
 
 ----
 
@@ -309,12 +309,12 @@ The first step is to fork `kitt4sme.live` on GitHub so you can use your fork as 
 
 to set the URL of your GitHub fork in the `repoURL` field. This will
 make Argo CD (see below) source the cluster build instructions from
-your repo instead of https://github.com/c0c0n3/kitt4sme.live. For
-example, if your GitHub user is `jimbo`
+your repo instead of https://github.com/INVENTIO-ai/kitt4sme.live. For
+example, if your GitHub user is `INVENTIO-ai`
 
 ```yaml
   source:
-    repoURL: https://github.com/jimbo/kitt4sme.live
+    repoURL: https://github.com/INVENTIO-ai/kitt4sme.live
     targetRevision: open-calls
     #...other fields
 ```
@@ -358,7 +358,7 @@ cluster — e.g. `istioctl 1.11.4`. Let's create a convenience script
 to start a Nix shell with our flake:
 
 ```bash
-$ echo 'nix shell github:c0c0n3/kitt4sme.live?dir=nix' > ~/tools.sh
+$ echo 'nix shell github:INVENTIO-ai/kitt4sme.live?dir=nix' > ~/tools.sh
 $ chmod +x ~/tools.sh
 ```
 
@@ -457,11 +457,11 @@ what that means, go read the [Cloud instance][arch.cloud] section of
 the architecture document :-)
 
 Deploy Istio to the cluster using our own profile. To do that first
-clone your fork and checkout the `open-calls` branch. For example,
-if your GitHub user is `jimbo`
+clone your fork and checkout the `open-calls` branch.
+
 
 ```bash
-$ git clone https://github.com/jimbo/kitt4sme.live
+$ git clone https://github.com/INVENTIO-ai/kitt4sme.live
 $ cd kitt4sme.live
 $ git checkout open-calls
 ```
@@ -587,13 +587,13 @@ On the other hand, solution providers gain access to a new international market 
 
 a. Sign in / Register (top-right) 
     
-![Sign in - Register](https://github.com/c0c0n3/kitt4sme.live/assets/2041951/bb4a722b-7410-44b4-9f38-62fe8d57ec4a)
+![Sign in - Register](https://github.com/INVENTIO-ai/kitt4sme.live/assets/2041951/bb4a722b-7410-44b4-9f38-62fe8d57ec4a)
 
 b. Register
 
-![To register page](https://github.com/c0c0n3/kitt4sme.live/assets/2041951/3d9ae0b7-50e7-4a17-bac0-d43aea84350c)
+![To register page](https://github.com/INVENTIO-ai/kitt4sme.live/assets/2041951/3d9ae0b7-50e7-4a17-bac0-d43aea84350c)
 
-![Register page](https://github.com/c0c0n3/kitt4sme.live/assets/2041951/6d700511-4c7e-4641-a415-84aa3ab44701)
+![Register page](https://github.com/INVENTIO-ai/kitt4sme.live/assets/2041951/6d700511-4c7e-4641-a415-84aa3ab44701)
     
 **2.	Create an organization:**
 
@@ -601,11 +601,11 @@ b. Register
     b. Create a new organization.
     c. Make the organization profile public
 
-![image](https://github.com/c0c0n3/kitt4sme.live/assets/2041951/32e28dee-cfa8-451e-a13e-4759cc5051e4)
+![image](https://github.com/INVENTIO-ai/kitt4sme.live/assets/2041951/32e28dee-cfa8-451e-a13e-4759cc5051e4)
 
-![image](https://github.com/c0c0n3/kitt4sme.live/assets/2041951/0ded2ea5-bed9-4fb1-b041-92c21a336ee6)
+![image](https://github.com/INVENTIO-ai/kitt4sme.live/assets/2041951/0ded2ea5-bed9-4fb1-b041-92c21a336ee6)
 
-![image](https://github.com/c0c0n3/kitt4sme.live/assets/2041951/e8c105a9-500b-4eaf-950f-86d8188517e0)
+![image](https://github.com/INVENTIO-ai/kitt4sme.live/assets/2041951/e8c105a9-500b-4eaf-950f-86d8188517e0)
 
 #### How to register a software solution to RAMP Marketplace  
 
@@ -615,7 +615,7 @@ b. Register
 
 2.	Click the green "Components" button
 
-![image](https://github.com/c0c0n3/kitt4sme.live/assets/2041951/dfe699c6-6615-42dd-a2c6-faed33bf08a1)
+![image](https://github.com/INVENTIO-ai/kitt4sme.live/assets/2041951/dfe699c6-6615-42dd-a2c6-faed33bf08a1)
 
 3.	Add component.
     
@@ -628,11 +628,11 @@ b. Register
     **Step 4.** Technical details: they add brief documentation targeting a technical developer, the required interfaces for importing data and for the produced output and the dependencies from external tools or libraries. 
     
 ##### End result
-![image](https://github.com/c0c0n3/kitt4sme.live/assets/2041951/190961c2-39fe-4a46-9291-cd1bd6a53ed9)
+![image](https://github.com/INVENTIO-ai/kitt4sme.live/assets/2041951/190961c2-39fe-4a46-9291-cd1bd6a53ed9)
 
 ##### Check that your component is publicly visible in the ‘Component Catalogue’
 
-![image](https://github.com/c0c0n3/kitt4sme.live/assets/2041951/9ae7f9d7-0d46-49f1-b927-9e11284f2c35)
+![image](https://github.com/INVENTIO-ai/kitt4sme.live/assets/2041951/9ae7f9d7-0d46-49f1-b927-9e11284f2c35)
 
 _Please take under consideration the following:_
 
@@ -645,13 +645,13 @@ _Please take under consideration the following:_
 _•	All the information in the component registration form can be filled in at the same time. E.g. someone can add both a source code repository for download, an executable application download link and a docker pull command, and all will be shown_
 
 [ramp.eu]: https://ramp.eu/#/home
-[arch.cloud]: https://github.com/c0c0n3/kitt4sme/blob/master/arch/mesh/cloud.md
+[arch.cloud]: https://github.com/INVENTIO-ai/kitt4sme/blob/master/arch/mesh/cloud.md
 [argocd]: https://argoproj.github.io/cd/
-[boot.argo-app-issue]: https://github.com/c0c0n3/kitt4sme.live/issues/42
-[demo]: https://github.com/c0c0n3/kitt4sme/tree/master/poc
+[boot.argo-app-issue]: https://github.com/INVENTIO-ai/kitt4sme.live/issues/42
+[demo]: https://github.com/INVENTIO-ai/kitt4sme/tree/master/poc
 [istio]: https://istio.io/
 [mk8s]: https://microk8s.io/
 [mk8s.port-range]: https://github.com/ubuntu/microk8s/issues/284
 [nix]: https://nixos.org/
-[kitt4sme.live]: https://github.com/c0c0n3/kitt4sme.live
+[kitt4sme.live]: https://github.com/INVENTIO-ai/kitt4sme.live
 [sec]: ./security.md
