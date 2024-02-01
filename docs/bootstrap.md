@@ -309,12 +309,11 @@ The first step is to fork `kitt4sme.live` on GitHub so you can use your fork as 
 
 to set the URL of your GitHub fork in the `repoURL` field. This will
 make Argo CD (see below) source the cluster build instructions from
-your repo instead of https://github.com/INVENTIO-ai/kitt4sme.live. For
-example, if your GitHub user is `jimbo`
+your repo instead of https://github.com/INVENTIO-ai/kitt4sme.live.
 
 ```yaml
   source:
-    repoURL: https://github.com/jimbo/kitt4sme.live
+    repoURL: https://github.com/INVENTIO-ai/kitt4sme.live
     targetRevision: open-calls
     #...other fields
 ```
@@ -458,10 +457,10 @@ the architecture document :-)
 
 Deploy Istio to the cluster using our own profile. To do that first
 clone your fork and checkout the `open-calls` branch. For example,
-if your GitHub user is `jimbo`
+if your GitHub user is `INVENTIO-ai`
 
 ```bash
-$ git clone https://github.com/jimbo/kitt4sme.live
+$ git clone https://github.com/INVENTIO-ai/kitt4sme.live
 $ cd kitt4sme.live
 $ git checkout open-calls
 ```
