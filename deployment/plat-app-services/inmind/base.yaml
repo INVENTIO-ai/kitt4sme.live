@@ -136,7 +136,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: localbroker-mqtt
+  name: localbroker
 spec:
   type: NodePort
   ports:
@@ -144,18 +144,6 @@ spec:
     targetPort: 1883
     nodePort: 35333
     protocol: TCP
-  selector:
-    app: localbroker
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: localbroker-ws
-spec:
-  type: NodePort
-  ports:
   - port: 35334
     targetPort: 8000
     nodePort: 35334
