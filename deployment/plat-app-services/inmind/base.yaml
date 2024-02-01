@@ -1,3 +1,60 @@
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 0
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-data-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 0
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mainapi-log-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 0
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: licence-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 0
+
+---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -149,8 +206,9 @@ spec:
         ports:
         - containerPort: 35342
         volumeMounts:
-        - name: storage-volume
+        - name: data-volume
           mountPath: /storage
+          subPath: storage
         resources:
           limits:
             nvidia.com/gpu: 1
@@ -161,8 +219,9 @@ spec:
         - containerPort: 80
         - containerPort: 81
         volumeMounts:
-        - name: serversdata-volume
+        - name: data-volume
           mountPath: /serversdata
+          subPath: storage
 
       - name: db
         image: inventio.azurecr.io/core/db:dev
@@ -176,9 +235,6 @@ spec:
         image: inventio.azurecr.io/core/flow:dev
         ports:
         - containerPort: 1880
-        volumeMounts:
-        - name: data-volume
-          mountPath: /opt/data/
 
       - name: localbroker
         image: inventio.azurecr.io/core/brokermosquitto:dev
@@ -194,12 +250,13 @@ spec:
         ports:
         - containerPort: 5001
         volumeMounts:
-        - name: log-volume
+        - name: mainapi-log-volume
           mountPath: /log
         - name: data-volume
           mountPath: /data
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
+          subPath: storage
+        # - name: docker-sock
+        #   mountPath: /var/run/docker.sock
 
       - name: dockermonitoring
         image: inventio.azurecr.io/core/dockermonitoring:dev
@@ -226,29 +283,7 @@ spec:
           mountPath: /licence
         - name: data-volume
           mountPath: /data
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
+        # - name: docker-sock
+        #   mountPath: /var/run/docker.sock
 
-      volumes:
-      - name: storage-volume
-        hostPath:
-          path: /home/azureuser/inmindfolder/DataVolume/Storage
-      - name: serversdata-volume
-        hostPath:
-          path: TBD
-      - name: db-data-volume
-        hostPath:
-          path: /home/azureuser/kitt4sme/DataVolume/db/postgres-data
-      - name: data-volume
-        hostPath:
-          path: /home/azureuser/inmindfolder/DataVolume
-      - name: log-volume
-        hostPath:
-          path: /home/azureuser/kitt4sme/LogVolume/Api
-      - name: docker-sock
-        hostPath:
-          path: /var/run/docker.sock
-      - name: licence-volume
-        hostPath:
-          path: /home/azureuser/inmindfolder/LicenceVolume-x86
 
