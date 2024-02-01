@@ -230,18 +230,25 @@ spec:
           mountPath: /var/run/docker.sock
 
       volumes:
-      - name: licence-volume
-        hostPath:
-          path: /home/azureuser/inmindfolder/LicenceVolume-x86
-      - name: data-volume
-        hostPath:
-          path: /home/azureuser/inmindfolder/DataVolume
-      - name: docker-sock
-        hostPath:
-          path: /var/run/docker.sock
-      - name: db-data-volume
-        hostPath:
-          path: /home/azureuser/inmindfolder/DataVolume/db/postgres-data
       - name: storage-volume
         hostPath:
           path: /home/azureuser/inmindfolder/DataVolume/Storage
+      - name: serversdata-volume
+        hostPath:
+          path: TBD
+      - name: db-data-volume
+        hostPath:
+          path: /home/azureuser/kitt4sme/DataVolume/db/postgres-data
+      - name: data-volume
+        hostPath:
+          path: /home/azureuser/inmindfolder/DataVolume
+      - name: log-volume
+        hostPath:
+          path: /home/azureuser/kitt4sme/LogVolume/Api
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: licence-volume
+        hostPath:
+          path: /home/azureuser/inmindfolder/LicenceVolume-x86
+
