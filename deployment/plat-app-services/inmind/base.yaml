@@ -264,15 +264,15 @@ spec:
         # - name: docker-sock
         #   mountPath: /var/run/docker.sock
 
-      - name: dockermonitoring
-        image: inventio.azurecr.io/core/dockermonitoring:dev
-        ports:
-        - containerPort: 8000
-        - containerPort: 9443
-        - containerPort: 9000
-        # volumeMounts:
-        # - name: docker-sock
-        #   mountPath: /var/run/docker.sock
+      # - name: dockermonitoring
+      #   image: inventio.azurecr.io/core/dockermonitoring:dev
+      #   ports:
+      #   - containerPort: 8000
+      #   - containerPort: 9443
+      #   - containerPort: 9000
+      #   # volumeMounts:
+      #   # - name: docker-sock
+      #   #   mountPath: /var/run/docker.sock
 
       - name: licence-manager-gui
         image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
