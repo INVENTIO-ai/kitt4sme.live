@@ -178,7 +178,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 35340
+  - port: 80
     targetPort: 80
     nodePort: 35340
     protocol: TCP
@@ -194,7 +194,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 35350
+  - port: 9000
     targetPort: 9000
     nodePort: 35350
     protocol: TCP
