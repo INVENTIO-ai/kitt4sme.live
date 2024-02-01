@@ -200,6 +200,8 @@ spec:
       labels:
         app: inmind
     spec:
+      imagePullSecrets:
+        - name: my-registry-secret
       containers:
       - name: quick-anomaly
         image: inventio.azurecr.io/modules/quick-anomaly-torch-onnx-x86-cuda-113:dev
@@ -212,9 +214,7 @@ spec:
         resources:
           limits:
             nvidia.com/gpu: 1
-        imagePullSecrets:
-        - name: my-registry-secret
-            
+        
       - name: reverseproxy
         image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
         ports:
@@ -224,8 +224,6 @@ spec:
         - name: data-volume
           mountPath: /serversdata
           subPath: storage
-        imagePullSecrets:
-        - name: my-registry-secret
 
       - name: db
         image: inventio.azurecr.io/core/db:dev
@@ -234,15 +232,11 @@ spec:
         volumeMounts:
         - name: db-data-volume
           mountPath: /var/lib/postgresql/data
-        imagePullSecrets:
-        - name: my-registry-secret
 
       - name: node-red
         image: inventio.azurecr.io/core/flow:dev
         ports:
         - containerPort: 1880
-        imagePullSecrets:
-        - name: my-registry-secret
 
       - name: localbroker
         image: inventio.azurecr.io/core/brokermosquitto:dev
@@ -252,8 +246,6 @@ spec:
         volumeMounts:
         - name: log-volume
           mountPath: /mosquitto/log
-        imagePullSecrets:
-        - name: my-registry-secret
 
       - name: mainapi
         image: inventio.azurecr.io/core/api:dev
@@ -267,8 +259,6 @@ spec:
           subPath: storage
         # - name: docker-sock
         #   mountPath: /var/run/docker.sock
-        imagePullSecrets:
-        - name: my-registry-secret
 
       - name: dockermonitoring
         image: inventio.azurecr.io/core/dockermonitoring:dev
@@ -279,15 +269,11 @@ spec:
         volumeMounts:
         - name: docker-sock
           mountPath: /var/run/docker.sock
-        imagePullSecrets:
-        - name: my-registry-secret
 
       - name: licence-manager-gui
         image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
         ports:
         - containerPort: 80
-        imagePullSecrets:
-        - name: my-registry-secret
 
       - name: licence-manager-api
         image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
@@ -301,6 +287,4 @@ spec:
           mountPath: /data
         # - name: docker-sock
         #   mountPath: /var/run/docker.sock
-        imagePullSecrets:
-        - name: my-registry-secret
 
