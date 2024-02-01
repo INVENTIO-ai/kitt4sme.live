@@ -140,11 +140,13 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 35333
+  - name: mqtt
+    port: 35333
     targetPort: 1883
     nodePort: 35333
     protocol: TCP
-  - port: 35334
+  - name: ws
+    port: 35334
     targetPort: 8000
     nodePort: 35334
     protocol: TCP
