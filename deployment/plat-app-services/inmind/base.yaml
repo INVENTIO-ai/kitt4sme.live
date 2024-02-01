@@ -288,3 +288,16 @@ spec:
         # - name: docker-sock
         #   mountPath: /var/run/docker.sock
 
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: data-volume
+      - name: db-data-volume
+        persistentVolumeClaim:
+          claimName: db-data-volume
+      - name: mainapi-log-volume
+        persistentVolumeClaim:
+          claimName: mainapi-log-volume
+      - name: licence-volume
+        persistentVolumeClaim:
+          claimName: licence-volume
