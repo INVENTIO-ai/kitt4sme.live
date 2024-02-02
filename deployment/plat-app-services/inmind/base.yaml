@@ -398,7 +398,7 @@ spec:
         #   mountPath: /var/run/docker.sock
 
       - name: portainer
-        image: "portainer/portainer-ce:2.19.4"
+        image: "inventio.azurecr.io/core/dockermonitoring:dev"
         args:
         - '--tunnel-port=30776'          
         volumeMounts:
