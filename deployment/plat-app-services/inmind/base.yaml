@@ -23,7 +23,7 @@ spec:
   storageClassName: microk8s-hostpath
   resources:
     requests:
-      storage: 100Mi
+      storage: 1Gi
 
 ---
 
@@ -158,6 +158,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: mainapi
+spec:
+  type: NodePort
+  ports:
+  - port: 5001
+    targetPort: 5001
+    protocol: TCP
+  selector:
+    app: mainapi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   name: licence-manager-api
 spec:
   type: NodePort
@@ -175,20 +190,6 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: mainapi
-spec:
-  type: NodePort
-  ports:
-  - port: 5001
-    targetPort: 5001
-    protocol: TCP
-  selector:
-    app: mainapi
-
----
 
 apiVersion: v1
 kind: Service
@@ -198,7 +199,7 @@ spec:
   type: NodePort
   ports:
   - port: 80
-    targetPort: 80
+    #targetPort: 80
     nodePort: 35340
     protocol: TCP
   selector:
@@ -269,7 +270,9 @@ spec:
         - name: "POSTGRES_USER"
           value: "postgres"
         - name: "POSTGRES_PASSWORD"
-          value: "P@ssw0rd1!"          
+          value: "P@ssw0rd1!"    
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata      
         ports:
         - containerPort: 5432
         volumeMounts:
