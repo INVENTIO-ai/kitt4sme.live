@@ -220,7 +220,7 @@ spec:
     targetPort: 80
     nodePort: 35340
     protocol: TCP
-    name: licence-manager-gui
+    name: http
   selector:
     app: licence-manager-gui
 
@@ -387,7 +387,7 @@ spec:
         image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
         ports:
         - containerPort: 80
-          name: licence-manager-gui
+          name: http
 
       - name: licence-manager-api
         image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
