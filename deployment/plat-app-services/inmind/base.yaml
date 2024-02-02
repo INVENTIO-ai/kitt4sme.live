@@ -265,6 +265,11 @@ spec:
 
       - name: db
         image: inventio.azurecr.io/core/db:dev
+        env:
+        - name: "POSTGRES_USER"
+          value: "postgres"
+        - name: "POSTGRES_PASSWORD"
+          value: "P@ssw0rd1!"          
         ports:
         - containerPort: 5432
         volumeMounts:
