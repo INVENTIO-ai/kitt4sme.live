@@ -73,7 +73,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: portainer
+  name: portainer-volume
 spec:
   accessModes:
     - ReadWriteOnce
@@ -445,7 +445,7 @@ spec:
           claimName: licence-volume
       - name: "portainer-data-volume"
         persistentVolumeClaim:
-          claimName: portainer
+          claimName: portainer-volume
 
 ---
 
