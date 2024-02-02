@@ -113,6 +113,7 @@ spec:
     targetPort: 80
     nodePort: 35332
     protocol: TCP
+    name: http
   selector:
     app: reverseproxy
 
@@ -208,19 +209,20 @@ spec:
 ---
 
 
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: licence-manager-gui
-# spec:
-#   type: NodePort
-#   ports:
-#   - port: 80
-#     targetPort: 5003
-#     nodePort: 35340
-#     protocol: TCP
-#   selector:
-#     app: licence-manager-gui
+apiVersion: v1
+kind: Service
+metadata:
+  name: licence-manager-gui
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 35340
+    protocol: TCP
+    name: licence-manager-gui
+  selector:
+    app: licence-manager-gui
 
 # ---
 
@@ -321,7 +323,7 @@ spec:
         image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
         ports:
         - containerPort: 80
-        - containerPort: 81
+          name: http
         volumeMounts:
         - name: data-volume
           mountPath: /serversdata
@@ -351,7 +353,9 @@ spec:
         image: inventio.azurecr.io/core/brokermosquitto:dev
         ports:
         - containerPort: 1883
+          name: mqtt
         - containerPort: 8000
+          name: ws
         volumeMounts:
         - name: broker-log-volume
           mountPath: /mosquitto/log
@@ -379,10 +383,11 @@ spec:
       #   # - name: docker-sock
       #   #   mountPath: /var/run/docker.sock
 
-      # - name: licence-manager-gui
-      #   image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
-      #   ports:
-      #   - containerPort: 80
+      - name: licence-manager-gui
+        image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
+        ports:
+        - containerPort: 80
+          name: licence-manager-gui
 
       - name: licence-manager-api
         image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
