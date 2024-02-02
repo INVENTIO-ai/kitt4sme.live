@@ -240,7 +240,7 @@ spec:
 #   selector:
 #     app: dockermonitoring
 
-# ---
+---
 
 # Source: portainer/templates/service.yaml
 apiVersion: v1
