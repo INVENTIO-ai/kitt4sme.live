@@ -117,7 +117,7 @@ spec:
     targetPort: 80
     nodePort: 35332
     protocol: TCP
-    name: http
+    name: httpreverse
   selector:
     app: inmind
 
@@ -237,7 +237,7 @@ spec:
     targetPort: 8005
     nodePort: 35340
     protocol: TCP
-    name: http
+    name: httplicence
   selector:
     app: inmind
 
@@ -353,7 +353,7 @@ spec:
         image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
         ports:
         - containerPort: 80
-          name: http
+          name: httpreverse
         volumeMounts:
         - name: data-volume
           mountPath: /serversdata
@@ -421,7 +421,7 @@ spec:
         image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
         ports:
         - containerPort: 80
-          name: http
+          name: httplicence
 
       - name: licence-manager-api
         image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
