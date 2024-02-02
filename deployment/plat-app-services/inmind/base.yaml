@@ -208,21 +208,21 @@ spec:
 ---
 
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: licence-manager-gui
-spec:
-  type: NodePort
-  ports:
-  - port: 80
-    targetPort: 5003
-    nodePort: 35340
-    protocol: TCP
-  selector:
-    app: licence-manager-gui
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: licence-manager-gui
+# spec:
+#   type: NodePort
+#   ports:
+#   - port: 80
+#     targetPort: 5003
+#     nodePort: 35340
+#     protocol: TCP
+#   selector:
+#     app: licence-manager-gui
 
----
+# ---
 
 # apiVersion: v1
 # kind: Service
