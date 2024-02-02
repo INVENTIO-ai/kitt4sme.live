@@ -178,6 +178,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: mainapi
+spec:
+  type: NodePort
+  ports:
+  - port: 5001
+    targetPort: 5001
+    protocol: TCP
+  selector:
+    app: mainapi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   name: licence-manager-gui
 spec:
   type: NodePort
@@ -204,7 +219,6 @@ spec:
     protocol: TCP
   selector:
     app: dockermonitoring
-
 
 ---
 
