@@ -398,11 +398,11 @@ spec:
       #   # - name: docker-sock
       #   #   mountPath: /var/run/docker.sock
 
-      # - name: licence-manager-gui
-      #   image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
-      #   ports:
-      #   - containerPort: 80
-      #     name: http
+      - name: licence-manager-gui
+        image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
+        ports:
+        - containerPort: 80
+          name: http
 
       - name: licence-manager-api
         image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
