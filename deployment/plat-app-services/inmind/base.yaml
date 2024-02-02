@@ -218,7 +218,6 @@ spec:
   type: NodePort
   ports:
   - port: 80
-    targetPort: 5004
     nodePort: 35340
     protocol: TCP
     name: http
