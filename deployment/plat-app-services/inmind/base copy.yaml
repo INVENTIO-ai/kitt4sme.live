@@ -1,0 +1,388 @@
+
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-data-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mainapi-log-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: broker-log-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: licence-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: portainer-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 1Gi
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: quick-anomaly
+spec:
+  type: NodePort
+  ports:
+  - port: 35342
+    targetPort: 35342
+    nodePort: 35342
+    protocol: TCP
+  selector:
+    app: quick-anomaly
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: reverseproxy
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 35332
+    protocol: TCP
+    name: http
+  selector:
+    app: reverseproxy
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  type: NodePort
+  ports:
+  - port: 5432
+    targetPort: 5432
+    nodePort: 35336
+    protocol: TCP
+    name: http
+  selector:
+    app: db
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-red
+spec:
+  type: NodePort
+  ports:
+  - port: 1880
+    targetPort: 1880
+    nodePort: 35335
+    protocol: TCP
+  selector:
+    app: node-red
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: localbroker
+spec:
+  type: NodePort
+  ports:
+  - name: mqtt
+    port: 1883
+    targetPort: 1883
+    nodePort: 35333
+    protocol: TCP
+  - name: ws
+    port: 8000
+    targetPort: 8000
+    nodePort: 35334
+    protocol: TCP
+  selector:
+    app: localbroker
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mainapi
+spec:
+  type: NodePort
+  ports:
+  - port: 5001
+    targetPort: 5001
+    protocol: TCP
+  selector:
+    app: mainapi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: licence-manager-api
+spec:
+  type: NodePort
+  ports:
+  - name: base
+    port: 5001
+    targetPort: 5001
+    protocol: TCP
+  - name: ws
+    port: 5002
+    targetPort: 5002
+    protocol: TCP
+  selector:
+    app: licence-manager-api
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: licence-manager-gui
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 5004
+    nodePort: 35340
+    protocol: TCP
+    name: http
+  selector:
+    app: licence-manager-gui
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dockermonitoring
+spec:
+  type: NodePort
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http1
+  - port: 9443
+    targetPort: 9443
+    protocol: TCP
+    name: http2
+  - port: 9000
+    targetPort: 9000
+    nodePort: 35350
+    protocol: TCP
+    name: http3
+  selector:
+    app: dockermonitoring
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: inmind
+  name: inmind
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inmind
+  template:
+    metadata:
+      labels:
+        app: inmind
+    spec:
+      imagePullSecrets:
+        - name: my-registry-secret
+      containers:
+      - name: quick-anomaly
+        image: inventio.azurecr.io/modules/quick-anomaly-torch-onnx-x86-cuda-113:dev
+        ports:
+        - containerPort: 35342
+        volumeMounts:
+        - name: data-volume
+          mountPath: /storage
+          subPath: storage
+        # resources:
+        #   limits:
+        #     nvidia.com/gpu: 1
+        
+      - name: reverseproxy
+        image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: data-volume
+          mountPath: /serversdata
+          subPath: storage
+
+      - name: db
+        image: inventio.azurecr.io/core/db:dev
+        env:
+        - name: "POSTGRES_USER"
+          value: "postgres"
+        - name: "POSTGRES_PASSWORD"
+          value: "P@ssw0rd1!"    
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata      
+        ports:
+        - containerPort: 5432
+          name: http
+        volumeMounts:
+        - name: db-data-volume
+          mountPath: /var/lib/postgresql/data
+
+      - name: node-red
+        image: inventio.azurecr.io/core/flow:dev
+        ports:
+        - containerPort: 1880
+
+      - name: localbroker
+        image: inventio.azurecr.io/core/brokermosquitto:dev
+        ports:
+        - containerPort: 1883
+          name: mqtt
+        - containerPort: 8000
+          name: ws
+        volumeMounts:
+        - name: broker-log-volume
+          mountPath: /mosquitto/log
+
+      - name: mainapi
+        image: inventio.azurecr.io/core/api:dev
+        ports:
+        - containerPort: 5001
+        volumeMounts:
+        - name: mainapi-log-volume
+          mountPath: /log
+        - name: data-volume
+          mountPath: /data
+          subPath: storage
+          
+      - name: dockermonitoring
+        image: inventio.azurecr.io/core/dockermonitoring:dev
+        ports:
+        - containerPort: 8000
+          name: http1
+        - containerPort: 9443
+          name: http2
+        - containerPort: 9000
+          name: http3
+
+      - name: licence-manager-gui
+        image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
+        ports:
+        - containerPort: 80
+          name: http
+
+      - name: licence-manager-api
+        image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
+        ports:
+        - containerPort: 5002
+        - containerPort: 5003
+        volumeMounts:
+        - name: licence-volume
+          mountPath: /licence
+        - name: data-volume
+          mountPath: /data
+
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: data-volume
+      - name: db-data-volume
+        persistentVolumeClaim:
+          claimName: db-data-volume
+      - name: mainapi-log-volume
+        persistentVolumeClaim:
+          claimName: mainapi-log-volume
+      - name: broker-log-volume
+        persistentVolumeClaim:
+          claimName: broker-log-volume
+      - name: licence-volume
+        persistentVolumeClaim:
+          claimName: licence-volume
+      - name: "portainer-data-volume"
+        persistentVolumeClaim:
+          claimName: portainer-volume
+
+---
+
+
