@@ -130,6 +130,7 @@ spec:
     targetPort: 5432
     nodePort: 35336
     protocol: TCP
+    name: http
   selector:
     app: db
 
@@ -351,6 +352,7 @@ spec:
           value: /var/lib/postgresql/data/pgdata      
         ports:
         - containerPort: 5432
+          name: http
         volumeMounts:
         - name: db-data-volume
           mountPath: /var/lib/postgresql/data
