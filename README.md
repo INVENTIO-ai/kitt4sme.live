@@ -2,6 +2,7 @@ KITT4SME live platform
 ----------------------
 > The AI's coming to the shop floor!
 
+
 This repo contains a work-in-progress reference implementation of the
 [KITT4SME platform][k4s].
 
