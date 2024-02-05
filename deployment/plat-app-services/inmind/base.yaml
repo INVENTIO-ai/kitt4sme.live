@@ -213,12 +213,12 @@ spec:
   - name: httplicenceapi
     port: 5002
     targetPort: 5002
-    nodePort: 35341
+    nodePort: 35351
     protocol: TCP
   - name: wslicenceapi
     port: 5003
     targetPort: 5003
-    nodePort: 35342
+    nodePort: 35352
     protocol: TCP
   selector:
     app: inmind
