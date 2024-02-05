@@ -72,7 +72,7 @@ spec:
         - name: my-registry-secret
       containers:
       - name: licence-manager-api
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
         ports:
         - containerPort: 5002
