@@ -223,25 +223,25 @@ spec:
 #   selector:
 #     app: inmind
 
----
+# ---
 
 
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: inmind
-  name: licence-manager-gui
-spec:
-  type: NodePort
-  ports:
-  - port: 5227
-    #targetPort: 5227
-    nodePort: 35340
-    #protocol: TCP
-    name: httplicence
-  selector:
-    app: inmind
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: inmind
+#   name: licence-manager-gui
+# spec:
+#   type: NodePort
+#   ports:
+#   - port: 5227
+#     #targetPort: 5227
+#     nodePort: 35340
+#     #protocol: TCP
+#     name: httplicence
+#   selector:
+#     app: inmind
 
 ---
 
@@ -420,11 +420,11 @@ spec:
       #   # - name: docker-sock
       #   #   mountPath: /var/run/docker.sock
 
-      - name: licence-manager-gui
-        image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-kitt4sme-x86:dev
-        ports:
-        - containerPort: 5227
-          name: httplicence
+      # - name: licence-manager-gui
+      #   image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-kitt4sme-x86:dev
+      #   ports:
+      #   - containerPort: 5227
+      #     name: httplicence
 
       # - name: licence-manager-api
       #   image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
