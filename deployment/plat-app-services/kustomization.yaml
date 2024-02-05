@@ -12,5 +12,6 @@ resources:
 # - sads
 # - viqe
 - inmindstorage
-- inmindlicenceapi
 - inmind
+- inmindlicenceapi
+- inmindlicencegui
