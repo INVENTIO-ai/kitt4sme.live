@@ -98,7 +98,7 @@ spec:
   - port: 35342
     targetPort: 35342
     nodePort: 35342
-    protocol: TCP
+    #protocol: TCP
   selector:
     app: inmind
 
@@ -114,9 +114,9 @@ spec:
   type: NodePort
   ports:
   - port: 80
-    targetPort: 80
+    #targetPort: 80
     nodePort: 35332
-    protocol: TCP
+    #protocol: TCP
     name: httpreverse
   selector:
     app: inmind
@@ -133,9 +133,9 @@ spec:
   type: NodePort
   ports:
   - port: 5432
-    targetPort: 5432
+    #targetPort: 5432
     nodePort: 35336
-    protocol: TCP
+    #protocol: TCP
     name: http
   selector:
     app: inmind
@@ -152,9 +152,9 @@ spec:
   type: NodePort
   ports:
   - port: 1880
-    targetPort: 1880
+    #targetPort: 1880
     nodePort: 35335
-    protocol: TCP
+    #protocol: TCP
   selector:
     app: inmind
 
@@ -171,14 +171,14 @@ spec:
   ports:
   - name: mqtt
     port: 1883
-    targetPort: 1883
+    #targetPort: 1883
     nodePort: 35333
-    protocol: TCP
+    #protocol: TCP
   - name: ws
     port: 8000
-    targetPort: 8000
+    #targetPort: 8000
     nodePort: 35334
-    protocol: TCP
+    #protocol: TCP
   selector:
     app: inmind
 
@@ -194,8 +194,8 @@ spec:
   type: NodePort
   ports:
   - port: 5001
-    targetPort: 5001
-    protocol: TCP
+    #targetPort: 5001
+    #protocol: TCP
   selector:
     app: inmind
 
@@ -212,14 +212,14 @@ spec:
   ports:
   - name: httplicenceapi
     port: 5002
-    targetPort: 5002
+    #targetPort: 5002
     nodePort: 35351
-    protocol: TCP
+    #protocol: TCP
   - name: wslicenceapi
     port: 5003
-    targetPort: 5003
+    #targetPort: 5003
     nodePort: 35352
-    protocol: TCP
+    #protocol: TCP
   selector:
     app: inmind
 
@@ -236,9 +236,9 @@ spec:
   type: NodePort
   ports:
   - port: 5227
-    targetPort: 5227
+    #targetPort: 5227
     nodePort: 35340
-    protocol: TCP
+    #protocol: TCP
     name: httplicence
   selector:
     app: inmind
@@ -255,17 +255,17 @@ spec:
   type: NodePort
   ports:
   - port: 8000
-    targetPort: 8000
-    protocol: TCP
+    #targetPort: 8000
+    #protocol: TCP
     name: http1
   - port: 9443
-    targetPort: 9443
-    protocol: TCP
+    #targetPort: 9443
+    #protocol: TCP
     name: http2
   - port: 9000
-    targetPort: 9000
+    #targetPort: 9000
     nodePort: 35350
-    protocol: TCP
+    #protocol: TCP
     name: http3
   selector:
     app: inmind
