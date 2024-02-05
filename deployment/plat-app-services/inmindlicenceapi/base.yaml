@@ -41,12 +41,12 @@ spec:
     port: 5002
     targetPort: 5002
     nodePort: 35351
-    #protocol: TCP
+    protocol: TCP
   - name: wslicenceapi
     port: 5003
     targetPort: 5003
     nodePort: 35352
-    #protocol: TCP
+    protocol: TCP
   selector:
     app: licence-manager-api
 
