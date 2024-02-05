@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: inmind
+  name: db
+spec:
+  type: NodePort
+  ports:
+  - port: 5432
+    targetPort: 5432
+    nodePort: 35336
+    #protocol: TCP
+    name: dbport
+  selector:
+    app: db
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      imagePullSecrets:
+        - name: my-registry-secret
+      containers:
+      - name: db
+        image: inventio.azurecr.io/core/db:dev
+        env:
+        - name: "POSTGRES_USER"
+          value: "postgres"
+        - name: "POSTGRES_PASSWORD"
+          value: "P@ssw0rd1!"    
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata      
+        ports:
+        - containerPort: 5432
+          name: dbport
+        volumeMounts:
+        - name: db-data-volume
+          mountPath: /var/lib/postgresql/data
+
+
+      volumes:
+      - name: db-data-volume
+        persistentVolumeClaim:
+          claimName: db-data-volume
+
