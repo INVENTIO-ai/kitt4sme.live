@@ -56,19 +56,19 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: licence-volume
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: microk8s-hostpath
-  resources:
-    requests:
-      storage: 100Mi
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: licence-volume
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: microk8s-hostpath
+#   resources:
+#     requests:
+#       storage: 100Mi
 
----
+# ---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -199,29 +199,29 @@ spec:
   selector:
     app: inmind
 
----
+# ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: inmind
-  name: licence-manager-api
-spec:
-  type: NodePort
-  ports:
-  - name: httplicenceapi
-    port: 5002
-    #targetPort: 5002
-    nodePort: 35351
-    #protocol: TCP
-  - name: wslicenceapi
-    port: 5003
-    #targetPort: 5003
-    nodePort: 35352
-    #protocol: TCP
-  selector:
-    app: inmind
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: inmind
+#   name: licence-manager-api
+# spec:
+#   type: NodePort
+#   ports:
+#   - name: httplicenceapi
+#     port: 5002
+#     #targetPort: 5002
+#     nodePort: 35351
+#     #protocol: TCP
+#   - name: wslicenceapi
+#     port: 5003
+#     #targetPort: 5003
+#     nodePort: 35352
+#     #protocol: TCP
+#   selector:
+#     app: inmind
 
 ---
 
@@ -426,18 +426,18 @@ spec:
         - containerPort: 5227
           name: httplicence
 
-      - name: licence-manager-api
-        image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
-        ports:
-        - containerPort: 5002
-          name: httplicenceapi
-        - containerPort: 5003
-          name: wslicenceapi
-        volumeMounts:
-        - name: licence-volume
-          mountPath: /licence
-        - name: data-volume
-          mountPath: /data
+      # - name: licence-manager-api
+      #   image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
+      #   ports:
+      #   - containerPort: 5002
+      #     name: httplicenceapi
+      #   - containerPort: 5003
+      #     name: wslicenceapi
+      #   volumeMounts:
+      #   - name: licence-volume
+      #     mountPath: /licence
+      #   - name: data-volume
+      #     mountPath: /data
         # - name: docker-sock
         #   mountPath: /var/run/docker.sock
 
@@ -484,9 +484,9 @@ spec:
       - name: broker-log-volume
         persistentVolumeClaim:
           claimName: broker-log-volume
-      - name: licence-volume
-        persistentVolumeClaim:
-          claimName: licence-volume
+      # - name: licence-volume
+      #   persistentVolumeClaim:
+      #     claimName: licence-volume
       - name: "portainer-data-volume"
         persistentVolumeClaim:
           claimName: portainer-volume
