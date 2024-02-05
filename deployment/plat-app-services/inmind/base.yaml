@@ -233,8 +233,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 8005
-    targetPort: 80
+  - port: 5227
+    targetPort: 5227
     nodePort: 35340
     protocol: TCP
     name: httplicence
@@ -418,9 +418,9 @@ spec:
       #   #   mountPath: /var/run/docker.sock
 
       - name: licence-manager-gui
-        image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
+        image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-kitt4sme-x86:dev
         ports:
-        - containerPort: 80
+        - containerPort: 5227
           name: httplicence
 
       - name: licence-manager-api
