@@ -394,6 +394,7 @@ spec:
           mountPath: /mosquitto/log
 
       - name: mainapi
+        imagePullPolicy: Always
         image: inventio.azurecr.io/core/api:dev
         ports:
         - containerPort: 5001
