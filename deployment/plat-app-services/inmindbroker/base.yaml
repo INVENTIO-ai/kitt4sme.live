@@ -4,7 +4,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: inmind
+    app: localbroker
   name: localbroker
 spec:
   type: NodePort

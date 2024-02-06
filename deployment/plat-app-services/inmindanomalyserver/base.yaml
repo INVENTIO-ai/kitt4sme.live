@@ -4,18 +4,17 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: reverseproxy
-  name: reverseproxy
+    app: quick-anomaly
+  name: quick-anomaly
 spec:
   type: NodePort
   ports:
-  - port: 80
-    targetPort: 80
-    nodePort: 35332
+  - port: 35342
+    targetPort: 35342
+    nodePort: 35342
     #protocol: TCP
-    name: httpreverse
   selector:
-    app: reverseproxy
+    app: quick-anomaly
 
 ---
 
@@ -24,31 +23,33 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: reverseproxy
-  name: reverseproxy
+    app: quick-anomaly
+  name: quick-anomaly
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: reverseproxy
+      app: quick-anomaly
   template:
     metadata:
       labels:
-        app: reverseproxy
+        app: quick-anomaly
     spec:
       imagePullSecrets:
         - name: my-registry-secret
       containers:
-      - name: reverseproxy
-        image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
+      - name: quick-anomaly
+        image: inventio.azurecr.io/modules/quick-anomaly-torch-onnx-x86-cuda-113:dev
         ports:
-        - containerPort: 80
-          name: httpreverse
+        - containerPort: 35342
         volumeMounts:
         - name: data-volume
-          mountPath: /serversdata
+          mountPath: /storage
           subPath: storage
-
+        # resources:
+        #   limits:
+        #     nvidia.com/gpu: 1
+        
       volumes:
       - name: data-volume
         persistentVolumeClaim:

@@ -13,10 +13,12 @@ resources:
 # - sads
 # - viqe
 - inmindstorage
-- inmind
+#- inmind
 - inmindlicenceapi
 - inmindlicencegui
 - inminddb
 - inmindbroker
 - inmindmainapi
 - inmindreverseproxy
+- inmindflow
+- inmindanomalyserver
