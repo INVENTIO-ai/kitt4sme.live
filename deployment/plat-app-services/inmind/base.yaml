@@ -104,24 +104,24 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: inmind
-  name: reverseproxy
-spec:
-  type: NodePort
-  ports:
-  - port: 80
-    #targetPort: 80
-    nodePort: 35332
-    #protocol: TCP
-    name: httpreverse
-  selector:
-    app: inmind
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: inmind
+#   name: reverseproxy
+# spec:
+#   type: NodePort
+#   ports:
+#   - port: 80
+#     #targetPort: 80
+#     nodePort: 35332
+#     #protocol: TCP
+#     name: httpreverse
+#   selector:
+#     app: inmind
 
----
+# ---
 
 # apiVersion: v1
 # kind: Service
@@ -160,44 +160,44 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: inmind
-  name: localbroker
-spec:
-  type: NodePort
-  ports:
-  - name: mqtt
-    port: 1883
-    #targetPort: 1883
-    nodePort: 35333
-    #protocol: TCP
-  - name: ws
-    port: 8000
-    #targetPort: 8000
-    nodePort: 35334
-    #protocol: TCP
-  selector:
-    app: inmind
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: inmind
+#   name: localbroker
+# spec:
+#   type: NodePort
+#   ports:
+#   - name: mqtt
+#     port: 1883
+#     #targetPort: 1883
+#     nodePort: 35333
+#     #protocol: TCP
+#   - name: ws
+#     port: 8000
+#     #targetPort: 8000
+#     nodePort: 35334
+#     #protocol: TCP
+#   selector:
+#     app: inmind
 
----
+# ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: inmind
-  name: mainapi
-spec:
-  type: NodePort
-  ports:
-  - port: 5001
-    #targetPort: 5001
-    #protocol: TCP
-  selector:
-    app: inmind
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: inmind
+#   name: mainapi
+# spec:
+#   type: NodePort
+#   ports:
+#   - port: 5001
+#     #targetPort: 5001
+#     #protocol: TCP
+#   selector:
+#     app: inmind
 
 # ---
 
@@ -351,15 +351,15 @@ spec:
         #   limits:
         #     nvidia.com/gpu: 1
         
-      - name: reverseproxy
-        image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
-        ports:
-        - containerPort: 80
-          name: httpreverse
-        volumeMounts:
-        - name: data-volume
-          mountPath: /serversdata
-          subPath: storage
+      # - name: reverseproxy
+      #   image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
+      #   ports:
+      #   - containerPort: 80
+      #     name: httpreverse
+      #   volumeMounts:
+      #   - name: data-volume
+      #     mountPath: /serversdata
+      #     subPath: storage
 
       # - name: db
       #   image: inventio.azurecr.io/core/db:dev
@@ -382,28 +382,28 @@ spec:
         ports:
         - containerPort: 1880
 
-      - name: localbroker
-        image: inventio.azurecr.io/core/brokermosquitto:dev
-        ports:
-        - containerPort: 1883
-          name: mqtt
-        - containerPort: 8000
-          name: ws
-        volumeMounts:
-        - name: broker-log-volume
-          mountPath: /mosquitto/log
+      # - name: localbroker
+      #   image: inventio.azurecr.io/core/brokermosquitto:dev
+      #   ports:
+      #   - containerPort: 1883
+      #     name: mqtt
+      #   - containerPort: 8000
+      #     name: ws
+      #   volumeMounts:
+      #   - name: broker-log-volume
+      #     mountPath: /mosquitto/log
 
-      - name: mainapi
-        imagePullPolicy: Always
-        image: inventio.azurecr.io/core/api:dev
-        ports:
-        - containerPort: 5001
-        volumeMounts:
-        - name: mainapi-log-volume
-          mountPath: /log
-        - name: data-volume
-          mountPath: /data
-          subPath: storage
+      # - name: mainapi
+      #   imagePullPolicy: Always
+      #   image: inventio.azurecr.io/core/api:dev
+      #   ports:
+      #   - containerPort: 5001
+      #   volumeMounts:
+      #   - name: mainapi-log-volume
+      #     mountPath: /log
+      #   - name: data-volume
+      #     mountPath: /data
+      #     subPath: storage
         # - name: docker-sock
         #   mountPath: /var/run/docker.sock
 

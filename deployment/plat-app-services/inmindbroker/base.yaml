@@ -1,0 +1,65 @@
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: inmind
+  name: localbroker
+spec:
+  type: NodePort
+  ports:
+  - name: mqtt
+    port: 1883
+    #targetPort: 1883
+    nodePort: 35333
+    #protocol: TCP
+  - name: ws
+    port: 8000
+    #targetPort: 8000
+    nodePort: 35334
+    #protocol: TCP
+  selector:
+    app: localbroker
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: localbroker
+  name: localbroker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: localbroker
+  template:
+    metadata:
+      labels:
+        app: localbroker
+    spec:
+      imagePullSecrets:
+        - name: my-registry-secret
+      containers:
+      - name: localbroker
+        image: inventio.azurecr.io/core/brokermosquitto:dev
+        ports:
+        - containerPort: 1883
+          name: mqtt
+        - containerPort: 8000
+          name: ws
+        volumeMounts:
+        - name: broker-log-volume
+          mountPath: /mosquitto/log
+
+      volumes:
+      - name: broker-log-volume
+        persistentVolumeClaim:
+          claimName: broker-log-volume
+
+---
+
+

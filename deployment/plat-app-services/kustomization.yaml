@@ -16,3 +16,5 @@ resources:
 - inmindlicenceapi
 - inmindlicencegui
 - inminddb
+- inmindbroker
+- inmindreverseproxy
