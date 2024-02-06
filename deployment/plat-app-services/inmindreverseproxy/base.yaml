@@ -15,7 +15,7 @@ spec:
     #protocol: TCP
     name: httpreverse
   selector:
-    app: inmind
+    app: reverseproxy
 
 ---
 
