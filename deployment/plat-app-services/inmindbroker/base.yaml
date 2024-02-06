@@ -11,12 +11,12 @@ spec:
   ports:
   - name: mqtt
     port: 1883
-    #targetPort: 1883
+    targetPort: 1883
     nodePort: 35333
     #protocol: TCP
   - name: ws
     port: 8000
-    #targetPort: 8000
+    targetPort: 8000
     nodePort: 35334
     #protocol: TCP
   selector:
