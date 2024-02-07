@@ -24,7 +24,7 @@ data:
             listen 80;
 
             location / {
-                proxy_pass http://reverseproxy:80;
+                proxy_pass http://maingui:80;
             }
 
             location /mqtt
