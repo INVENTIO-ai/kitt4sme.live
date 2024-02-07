@@ -23,6 +23,9 @@ data:
 
             listen 80;
 
+            access_log /var/log/nginx/port80.com.access.log;
+            error_log /var/log/nginx/port80.com.error.log;
+
             location / {
                 proxy_pass http://maingui:80;
             }
