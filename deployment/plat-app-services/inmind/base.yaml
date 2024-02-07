@@ -1,496 +1,148 @@
-
-
-# # apiVersion: v1
-# # kind: PersistentVolumeClaim
-# # metadata:
-# #   name: data-volume
-# # spec:
-# #   accessModes:
-# #     - ReadWriteOnce
-# #   storageClassName: microk8s-hostpath
-# #   resources:
-# #     requests:
-# #       storage: 10Gi
-
-# # ---
-
-# # apiVersion: v1
-# # kind: PersistentVolumeClaim
-# # metadata:
-# #   name: db-data-volume
-# # spec:
-# #   accessModes:
-# #     - ReadWriteOnce
-# #   storageClassName: microk8s-hostpath
-# #   resources:
-# #     requests:
-# #       storage: 1Gi
-
-# # ---
-
-# # apiVersion: v1
-# # kind: PersistentVolumeClaim
-# # metadata:
-# #   name: mainapi-log-volume
-# # spec:
-# #   accessModes:
-# #     - ReadWriteOnce
-# #   storageClassName: microk8s-hostpath
-# #   resources:
-# #     requests:
-# #       storage: 100Mi
-
-# # ---
-
-# # apiVersion: v1
-# # kind: PersistentVolumeClaim
-# # metadata:
-# #   name: broker-log-volume
-# # spec:
-# #   accessModes:
-# #     - ReadWriteOnce
-# #   storageClassName: microk8s-hostpath
-# #   resources:
-# #     requests:
-# #       storage: 100Mi
-
-# # ---
-
-# # # apiVersion: v1
-# # # kind: PersistentVolumeClaim
-# # # metadata:
-# # #   name: licence-volume
-# # # spec:
-# # #   accessModes:
-# # #     - ReadWriteOnce
-# # #   storageClassName: microk8s-hostpath
-# # #   resources:
-# # #     requests:
-# # #       storage: 100Mi
-
-# # # ---
-
-# # apiVersion: v1
-# # kind: PersistentVolumeClaim
-# # metadata:
-# #   name: portainer-volume
-# # spec:
-# #   accessModes:
-# #     - ReadWriteOnce
-# #   storageClassName: microk8s-hostpath
-# #   resources:
-# #     requests:
-# #       storage: 1Gi
-
-
-# # ---
-
-
 # apiVersion: v1
-# kind: Service
+# kind: ConfigMap
 # metadata:
-#   labels:
-#     app: inmind
-#   name: quick-anomaly
-# spec:
-#   type: NodePort
-#   ports:
-#   - port: 35342
-#     targetPort: 35342
-#     nodePort: 35342
-#     #protocol: TCP
-#   selector:
-#     app: inmind
+#   name: nginx-config
+# data:
+#   nginx.conf: |
+#     user nginx;
+#     worker_processes auto;
+#     error_log /var/log/nginx/error.log warn;
+#     pid /var/run/nginx.pid;
+
+#     events {
+#         worker_connections 1024;
+#     }
+
+#     http {
+#         server {
+#             client_max_body_size        20000M;
+#             proxy_connect_timeout       600;
+#             proxy_send_timeout          600;
+#             proxy_read_timeout          600;
+#             send_timeout                600;
+
+#             listen 80;
+
+#             location / {
+#                 try_files $uri $uri/ =404;
+#                 proxy_http_version 1.1;
+#                 proxy_set_header Upgrade $http_upgrade;
+#                 proxy_set_header Connection "upgrade";
+#                 proxy_set_header X-Real-IP $remote_addr;
+#                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#                 proxy_set_header Host $http_host;
+#                 proxy_set_header X-NginX-Proxy true;
+#                 proxy_pass http://reverseproxy:80;
+#             }
+
+#             location /mqtt
+#             {
+#                 proxy_http_version 1.1;
+#                 proxy_set_header Upgrade $http_upgrade;
+#                 proxy_set_header Connection "upgrade";
+#                 proxy_set_header Host $host;
+
+#                 proxy_pass http://localbroker:8000;
+#             }
+
+#             location /wsext
+#             {
+#                 proxy_http_version 1.1;
+#                 proxy_set_header Upgrade $http_upgrade;
+#                 proxy_set_header Connection "upgrade";
+#                 proxy_set_header Host $host;
+
+#                 proxy_pass http://node-red:34123;
+#             }
+
+#             location  /node-red  {
+#                 proxy_set_header Host $http_host;
+#                 proxy_set_header X-Real-IP $remote_addr;
+#                 proxy_http_version 1.1;
+#                 proxy_set_header Upgrade $http_upgrade;
+#                 proxy_set_header Connection "upgrade";
+#                 proxy_pass http://node-red:1880;
+#             }
+
+#             location '/.well-known/acme-challenge' {
+#                 root /var/www/html;
+#             }
+
+#             location /mainapi/ {
+#                 rewrite ^/mainapi/?(.*) /$1 break;
+#                 proxy_set_header Host $host;
+#                 proxy_set_header X-Real-IP $remote_addr;
+#                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#                 #Aggiunto i seguenti per pbm SSE http come descritto al seguente link
+
+#                 proxy_set_header Connection '';
+#                 proxy_http_version 1.1;
+#                 chunked_transfer_encoding off;
+#                 proxy_buffering off;
+#                 proxy_cache off;
+#                 proxy_read_timeout 86400s; 
+#                 proxy_pass http://mainapi:5001/;
+#             }
+
+#             location /serversdata/ {
+#                 alias /serversdata;
+#                 try_files $uri $uri/ =404;
+#                 add_header Cache-Control 'public';
+#                 add_header Access-Control-Allow-Origin *;
+#                 if_modified_since off;
+#                 expires off;
+#                 etag off;
+#             }
+#         }
+#     }
 
 # ---
-
-# # apiVersion: v1
-# # kind: Service
-# # metadata:
-# #   labels:
-# #     app: inmind
-# #   name: reverseproxy
-# # spec:
-# #   type: NodePort
-# #   ports:
-# #   - port: 80
-# #     #targetPort: 80
-# #     nodePort: 35332
-# #     #protocol: TCP
-# #     name: httpreverse
-# #   selector:
-# #     app: inmind
-
-# # ---
-
-# # apiVersion: v1
-# # kind: Service
-# # metadata:
-# #   labels:
-# #     app: inmind
-# #   name: db
-# # spec:
-# #   type: NodePort
-# #   ports:
-# #   - port: 5432
-# #     #targetPort: 5432
-# #     nodePort: 35336
-# #     #protocol: TCP
-# #     name: http
-# #   selector:
-# #     app: inmind
-
-# # ---
-
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   labels:
-#     app: inmind
-#   name: node-red
-# spec:
-#   type: NodePort
-#   ports:
-#   - port: 1880
-#     #targetPort: 1880
-#     nodePort: 35335
-#     #protocol: TCP
-#   selector:
-#     app: inmind
-
-# ---
-
-# # apiVersion: v1
-# # kind: Service
-# # metadata:
-# #   labels:
-# #     app: inmind
-# #   name: localbroker
-# # spec:
-# #   type: NodePort
-# #   ports:
-# #   - name: mqtt
-# #     port: 1883
-# #     #targetPort: 1883
-# #     nodePort: 35333
-# #     #protocol: TCP
-# #   - name: ws
-# #     port: 8000
-# #     #targetPort: 8000
-# #     nodePort: 35334
-# #     #protocol: TCP
-# #   selector:
-# #     app: inmind
-
-# # ---
-
-# # apiVersion: v1
-# # kind: Service
-# # metadata:
-# #   labels:
-# #     app: inmind
-# #   name: mainapi
-# # spec:
-# #   type: NodePort
-# #   ports:
-# #   - port: 5001
-# #     #targetPort: 5001
-# #     #protocol: TCP
-# #   selector:
-# #     app: inmind
-
-# # ---
-
-# # apiVersion: v1
-# # kind: Service
-# # metadata:
-# #   labels:
-# #     app: inmind
-# #   name: licence-manager-api
-# # spec:
-# #   type: NodePort
-# #   ports:
-# #   - name: httplicenceapi
-# #     port: 5002
-# #     #targetPort: 5002
-# #     nodePort: 35351
-# #     #protocol: TCP
-# #   - name: wslicenceapi
-# #     port: 5003
-# #     #targetPort: 5003
-# #     nodePort: 35352
-# #     #protocol: TCP
-# #   selector:
-# #     app: inmind
-
-# # ---
-
-
-# # apiVersion: v1
-# # kind: Service
-# # metadata:
-# #   labels:
-# #     app: inmind
-# #   name: licence-manager-gui
-# # spec:
-# #   type: NodePort
-# #   ports:
-# #   - port: 5227
-# #     #targetPort: 5227
-# #     nodePort: 35340
-# #     #protocol: TCP
-# #     name: httplicence
-# #   selector:
-# #     app: inmind
-
-# ---
-
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   labels:
-#     app: inmind
-#   name: dockermonitoring
-# spec:
-#   type: NodePort
-#   ports:
-#   - port: 8000
-#     #targetPort: 8000
-#     #protocol: TCP
-#     name: http1
-#   - port: 9443
-#     #targetPort: 9443
-#     #protocol: TCP
-#     name: http2
-#   - port: 9000
-#     #targetPort: 9000
-#     nodePort: 35350
-#     #protocol: TCP
-#     name: http3
-#   selector:
-#     app: inmind
-
-# ---
-
-
-
-# # # Source: portainer/templates/service.yaml
-# # apiVersion: v1
-# # kind: Service
-# # metadata:
-# #   name: portainer
-# # spec:
-# #   type: NodePort
-# #   ports:
-# #     - port: 9000
-# #       targetPort: 9000
-# #       protocol: TCP
-# #       name: http
-# #       nodePort: 30777
-# #     - port: 9443
-# #       targetPort: 9443
-# #       protocol: TCP
-# #       name: https
-# #       nodePort: 30779      
-# #     - port: 30776
-# #       targetPort: 30776
-# #       protocol: TCP
-# #       name: edge
-# #       nodePort: 30776
-# #   selector:
-# #     app: portainer
-
-# # ---
-
-# # kind: ClusterRoleBinding
-# # metadata:
-# #   name: portainer
-# #   labels:
-# #     app.kubernetes.io/name: portainer
-# #     app.kubernetes.io/instance: portainer
-# #     app.kubernetes.io/version: "ce-latest-ee-2.19.4"
-# # roleRef:
-# #   apiGroup: rbac.authorization.k8s.io
-# #   kind: ClusterRole
-# #   name: cluster-admin
-# # subjects:
-# # - kind: ServiceAccount
-# #   namespace: portainer
-# #   name: portainer-sa-clusteradmin
-
-# # ---
 
 # apiVersion: apps/v1
 # kind: Deployment
 # metadata:
-#   labels:
-#     app: inmind
-#   name: inmind
+#   name: inmind-reverseproxy
 # spec:
 #   replicas: 1
 #   selector:
 #     matchLabels:
-#       app: inmind
+#       app: inmind-reverseproxy
 #   template:
 #     metadata:
 #       labels:
-#         app: inmind
+#         app: inmind-reverseproxy
 #     spec:
-#       imagePullSecrets:
-#         - name: my-registry-secret
 #       containers:
-#       - name: quick-anomaly
-#         image: inventio.azurecr.io/modules/quick-anomaly-torch-onnx-x86-cuda-113:dev
+#       - name: nginx
+#         image: nginx:latest
 #         ports:
-#         - containerPort: 35342
+#         - containerPort: 80
 #         volumeMounts:
+#         - name: nginx-config
+#           mountPath: /etc/nginx/nginx.conf
+#           subPath: nginx.conf
 #         - name: data-volume
-#           mountPath: /storage
-#           subPath: storage
-#         # resources:
-#         #   limits:
-#         #     nvidia.com/gpu: 1
-        
-#       # - name: reverseproxy
-#       #   image: inventio.azurecr.io/iapp-quickanomaly/reverseproxy-x86:dev
-#       #   ports:
-#       #   - containerPort: 80
-#       #     name: httpreverse
-#       #   volumeMounts:
-#       #   - name: data-volume
-#       #     mountPath: /serversdata
-#       #     subPath: storage
-
-#       # - name: db
-#       #   image: inventio.azurecr.io/core/db:dev
-#       #   env:
-#       #   - name: "POSTGRES_USER"
-#       #     value: "postgres"
-#       #   - name: "POSTGRES_PASSWORD"
-#       #     value: "P@ssw0rd1!"    
-#       #   - name: PGDATA
-#       #     value: /var/lib/postgresql/data/pgdata      
-#       #   ports:
-#       #   - containerPort: 5432
-#       #     name: http
-#       #   volumeMounts:
-#       #   - name: db-data-volume
-#       #     mountPath: /var/lib/postgresql/data
-
-#       - name: node-red
-#         image: inventio.azurecr.io/core/flow:dev
-#         ports:
-#         - containerPort: 1880
-
-#       # - name: localbroker
-#       #   image: inventio.azurecr.io/core/brokermosquitto:dev
-#       #   ports:
-#       #   - containerPort: 1883
-#       #     name: mqtt
-#       #   - containerPort: 8000
-#       #     name: ws
-#       #   volumeMounts:
-#       #   - name: broker-log-volume
-#       #     mountPath: /mosquitto/log
-
-#       # - name: mainapi
-#       #   imagePullPolicy: Always
-#       #   image: inventio.azurecr.io/core/api:dev
-#       #   ports:
-#       #   - containerPort: 5001
-#       #   volumeMounts:
-#       #   - name: mainapi-log-volume
-#       #     mountPath: /log
-#       #   - name: data-volume
-#       #     mountPath: /data
-#       #     subPath: storage
-#         # - name: docker-sock
-#         #   mountPath: /var/run/docker.sock
-
-#       # - name: dockermonitoring
-#       #   image: inventio.azurecr.io/core/dockermonitoring:dev
-#       #   ports:
-#       #   # - containerPort: 8000
-#       #   #   name: http1
-#       #   - containerPort: 9443
-#       #     name: http2
-#       #   - containerPort: 9000
-#       #     name: http3
-#       #   # volumeMounts:
-#       #   # - name: docker-sock
-#       #   #   mountPath: /var/run/docker.sock
-
-#       # - name: licence-manager-gui
-#       #   image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-kitt4sme-x86:dev
-#       #   ports:
-#       #   - containerPort: 5227
-#       #     name: httplicence
-
-#       # - name: licence-manager-api
-#       #   image: inventio.azurecr.io/edge-licence-manager/api-x86:dev
-#       #   ports:
-#       #   - containerPort: 5002
-#       #     name: httplicenceapi
-#       #   - containerPort: 5003
-#       #     name: wslicenceapi
-#       #   volumeMounts:
-#       #   - name: licence-volume
-#       #     mountPath: /licence
-#       #   - name: data-volume
-#       #     mountPath: /data
-#         # - name: docker-sock
-#         #   mountPath: /var/run/docker.sock
-
-#       # - name: portainer
-#       #   image: "inventio.azurecr.io/core/dockermonitoring:dev"
-#       #   args:
-#       #   - '--tunnel-port=30776'          
-#       #   volumeMounts:
-#       #     - name: portainer-data-volume
-#       #       mountPath: /data              
-#       #   ports:
-#       #     - name: http
-#       #       containerPort: 9000
-#       #       protocol: TCP
-#       #     - name: https
-#       #       containerPort: 9443
-#       #       protocol: TCP              
-#       #     - name: tcp-edge
-#       #       containerPort: 8000
-#       #       protocol: TCP              
-#       #   livenessProbe:
-#       #     httpGet:
-#       #       path: /
-#       #       port: 9443
-#       #       scheme: HTTPS
-#       #   readinessProbe:
-#       #     httpGet:
-#       #       path: /
-#       #       port: 9443
-#       #       scheme: HTTPS
-#       #   resources:
-#       #     {}
-
+#           mountPath: /serversdata
+#           subPath: Storage
 #       volumes:
+#       - name: nginx-config
+#         configMap:
+#           name: nginx-config
 #       - name: data-volume
 #         persistentVolumeClaim:
-#           claimName: data-volume
-#       # - name: db-data-volume
-#       #   persistentVolumeClaim:
-#       #     claimName: db-data-volume
-#       - name: mainapi-log-volume
-#         persistentVolumeClaim:
-#           claimName: mainapi-log-volume
-#       - name: broker-log-volume
-#         persistentVolumeClaim:
-#           claimName: broker-log-volume
-#       # - name: licence-volume
-#       #   persistentVolumeClaim:
-#       #     claimName: licence-volume
-#       - name: "portainer-data-volume"
-#         persistentVolumeClaim:
-#           claimName: portainer-volume
+#           claimName: data-volume  # Update this with your PVC name
 
 # ---
 
-
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: inmind-reverseproxy
+# spec:
+#   type: NodePort
+#   ports:
+#   - port: 80
+#     targetPort: 80
+#     nodePort: 35332
+#   selector:
+#     app: inmind-reverseproxy
