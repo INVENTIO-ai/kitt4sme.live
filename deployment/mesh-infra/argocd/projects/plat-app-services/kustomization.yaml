@@ -22,4 +22,4 @@ resources:
 - inmindreverseproxy
 - inmindflow
 - inmindanomalyserver
-- dockermonitoring
+- inmindmonitor
