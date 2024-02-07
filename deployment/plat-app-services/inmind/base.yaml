@@ -63,7 +63,7 @@ data:
                 root /var/www/html;
             }
 
-            location /mainapi/ {
+            location /mainapi {
                 rewrite ^/mainapi/?(.*) /$1 break;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
@@ -76,7 +76,7 @@ data:
                 proxy_buffering off;
                 proxy_cache off;
                 proxy_read_timeout 86400s; 
-                proxy_pass http://mainapi:5001/;
+                proxy_pass http://mainapi:5001;
             }
 
             location /serversdata/ {
