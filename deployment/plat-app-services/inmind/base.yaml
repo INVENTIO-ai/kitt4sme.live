@@ -164,7 +164,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: "/mainapi"
+            prefix: "/mainapi2"
       rewrite:
         uri: "/"
       route:
