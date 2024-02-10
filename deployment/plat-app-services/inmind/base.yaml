@@ -204,14 +204,12 @@ spec:
   http:
   - match:
     - uri:
-        prefix: "/"
-      # Esclude le richieste che iniziano con /mainapi per evitare conflitti con il VirtualService di mainapi
-      except:
-      - "/mainapi"
+        prefix: "/mainapi"
+    rewrite:
+      uri: "/"
     route:
     - destination:
-        host: reverseproxy
+        host: mainapi
         port:
-          number: 80
-
+          number: 5001
 
