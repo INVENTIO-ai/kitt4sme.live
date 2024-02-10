@@ -6,14 +6,14 @@ metadata:
     app: mainapi
   name: mainapi
 spec:
-  type: NodePort
+  #type: NodePort
   ports:
   - protocol: TCP
     port: 5001
     targetPort: 5001
     nodePort: 35353
-  selector:
-    app: mainapi
+  # selector:
+  #   app: mainapi
 
 ---
 
