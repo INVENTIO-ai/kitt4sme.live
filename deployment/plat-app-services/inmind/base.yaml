@@ -157,43 +157,61 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: "inmind-gateway"
+  name: custom-gateway
 spec:
   selector:
-    istio: reverseproxy
+    istio: ingressgateway
   servers:
-  - hosts:
-    - "reverseproxy.default.svc.cluster.local"
-    port:
-      name: http
-      number: 80
+  - port:
+      number: 35341
+      name: custom-port
       protocol: HTTP
-    tls:
-      httpsRedirect: false
+    hosts:
+    - "*"
 
 ---
-
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: "inmind-virtual-service"
+  name: mainapi-virtual-service
 spec:
-  gateways:
-  - "inmind-gateway"
   hosts:
-  - "reverseproxy.default.svc.cluster.local"
+  - "*"
+  gateways:
+  - custom-gateway
   http:
-  - match:  # NOTE (1)
+  - match:
     - uri:
-        prefix: /mainapi2/
-    - uri:
-        prefix: /mainapi2
+        prefix: "/mainapi"
     rewrite:
-      uri: /
+      uri: "/"
     route:
     - destination:
-        host: mainapi.default.svc.cluster.local
+        host: mainapi
         port:
           number: 5001
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: reverseproxy-virtual-service
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - custom-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+      # Esclude le richieste che iniziano con /mainapi per evitare conflitti con il VirtualService di mainapi
+      except:
+      - "/mainapi"
+    route:
+    - destination:
+        host: reverseproxy
+        port:
+          number: 80
 
 
