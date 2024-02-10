@@ -101,8 +101,6 @@ spec:
     - match:
       - uri:
           prefix: "/mainapi"
-      # rewrite:
-      #   uri: "/"
       route:
         - destination:
             host: reverseproxy
