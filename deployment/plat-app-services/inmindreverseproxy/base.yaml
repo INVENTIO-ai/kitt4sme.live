@@ -57,3 +57,21 @@ spec:
 ---
 
 
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: mainapi-virtual-service
+spec:
+  hosts:
+  - "*"  # Si applica a tutti i domini host, modifica se necessario
+  gateways:
+  - mainapi-gateway  # Assicurati che questo corrisponda al nome del tuo Gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/mainapi"  # Cattura /mainapi e tutte le sotto-path
+    route:
+    - destination:
+        host: mainapi.default.svc.cluster.local  # Modifica con il tuo servizio di destinazione
+        port:
+          number: 5001  # Modifica con la porta del tuo servizio di destinazione
