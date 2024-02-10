@@ -66,6 +66,10 @@ spec:
             - port: 15443
               targetPort: 15443
               name: tls
+            - port: 35341  # inmind port
+              nodePort: 35341
+              targetPort: 35341
+              name: inmind
 
     pilot:
       k8s:
