@@ -56,6 +56,23 @@ spec:
 
 ---
 
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: "inmind-gateway"
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - "*"
+    port:
+      name: http
+      number: 35000
+      protocol: HTTP
+    tls:
+      httpsRedirect: false
+---
 
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -65,11 +82,13 @@ spec:
   hosts:
   - "*"  # Si applica a tutti i domini host, modifica se necessario
   gateways:
-  - mainapi-gateway  # Assicurati che questo corrisponda al nome del tuo Gateway
+  - inmind-gateway  # Assicurati che questo corrisponda al nome del tuo Gateway
   http:
   - match:
     - uri:
         prefix: "/mainapi"  # Cattura /mainapi e tutte le sotto-path
+    rewrite:
+      uri: "/"  # Opzionale: riscrive l'URI prima di inoltrarlo
     route:
     - destination:
         host: mainapi.default.svc.cluster.local  # Modifica con il tuo servizio di destinazione
