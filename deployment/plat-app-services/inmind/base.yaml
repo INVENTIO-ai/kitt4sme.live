@@ -67,7 +67,7 @@ data:
                 proxy_set_header Upgrade $http_upgrade;
                 proxy_set_header Connection "upgrade";
 
-                proxy_pass http://mainapi:5001;
+                proxy_pass mainapi:5001;
             }
 
             location /serversdata/ {
