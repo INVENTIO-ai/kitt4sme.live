@@ -213,3 +213,39 @@ spec:
         port:
           number: 5001
 
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mainapiinternal
+spec:
+  selector:
+    app: mainapi # Assicurati che questo corrisponda ai selettori dei pod del servizio `mainapi`
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80 # Supponendo che i pod `mainapi` ascoltino su questa porta per il traffico interno
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: mainapiinternal-virtual-service
+spec:
+  hosts:
+    - mainapiinternal # Usa il nome del servizio interno `mainapiinternal`
+  http:
+    - match:
+        - uri:
+            prefix: "/mainapi"
+      rewrite:
+        uri: "/" # Rimuovi il prefisso `/mainapi` dall'URL
+      route:
+        - destination:
+            host: mainapi # Il nome del servizio di destinazione
+            port:
+              number: 5001 # La porta del servizio di destinazione
+
+
