@@ -26,7 +26,8 @@ data:
             access_log /var/log/nginx/port80.com.access.log;
             error_log /var/log/nginx/port80.com.error.log;
 
-            location /mainapi/ {
+            location /mainapi {
+                rewrite ^/mainapi/?(.*) /$1 break;
                 proxy_pass http://mainapi:5001/;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
@@ -98,10 +99,10 @@ spec:
     - "reverseproxy"
   http:
     - match:
-        - uri:
-            prefix: "/mainapi"
-      rewrite:
-        uri: "/"
+      - uri:
+          prefix: "/mainapi"
+      # rewrite:
+      #   uri: "/"
       route:
         - destination:
             host: reverseproxy
