@@ -64,8 +64,8 @@ data:
                 root /var/www/html;
             }
 
-            location /mainapi2 {
-                #rewrite ^/mainapi2?(.*) /$1 break;
+            location /mainapi2/ {
+                #rewrite ^/mainapi2/?(.*) /$1 break;
 
                 proxy_set_header Host $http_host;
                 proxy_set_header X-Real-IP $remote_addr;
