@@ -160,10 +160,10 @@ metadata:
   name: "inmind-gateway"
 spec:
   selector:
-    istio: ingressgateway
+    istio: reverseproxy
   servers:
   - hosts:
-    - "*"
+    - "reverseproxy.default.svc.cluster.local"
     port:
       name: http
       number: 80
@@ -181,7 +181,7 @@ spec:
   gateways:
   - "inmind-gateway"
   hosts:
-  - "*"
+  - "reverseproxy.default.svc.cluster.local"
   http:
   - match:  # NOTE (1)
     - uri:
