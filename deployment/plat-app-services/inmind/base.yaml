@@ -59,7 +59,7 @@ data:
             }
 
             location /mainapi {
-                #rewrite ^/mainapi/?(.*) /$1 break;
+                rewrite ^/mainapi/?(.*) /$1 break;
 
                 proxy_set_header Host $http_host;
                 proxy_set_header X-Real-IP $remote_addr;
