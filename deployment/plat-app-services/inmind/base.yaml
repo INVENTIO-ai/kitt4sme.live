@@ -151,3 +151,25 @@ spec:
   selector:
     app: reverseproxy
 
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: mainapi-rewrite-virtual-service
+spec:
+  hosts:
+    - "reverseproxy"
+  http:
+    - match:
+        - uri:
+            prefix: "/mainapi"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            host: mainapi
+            port:
+              number: 5001
+
