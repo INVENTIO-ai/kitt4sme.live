@@ -222,7 +222,7 @@ metadata:
   name: mainapiinternal
 spec:
   selector:
-    app: mainapi # Assicurati che questo corrisponda ai selettori dei pod del servizio `mainapi`
+    app: mainapiinternal # Assicurati che questo corrisponda ai selettori dei pod del servizio `mainapi`
   ports:
     - protocol: TCP
       port: 80
