@@ -2,18 +2,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: mainapi
+  # labels:
+  #   app: mainapi
   name: mainapi
 spec:
   type: NodePort
   ports:
-  - port: 5001
+  - protocol: TCP
+    port: 5001
     targetPort: 5001
     nodePort: 35353
-    #protocol: TCP
-  selector:
-    app: mainapi
+  # selector:
+  #   app: mainapi
 
 ---
 
