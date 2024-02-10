@@ -142,6 +142,27 @@ spec:
   selector:
     app: reverseproxy
 
+---
+
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: reverseproxy-virtual-service
+spec:
+  hosts:
+    - "reverseproxy"
+  http:
+    - match:
+        - uri:
+            prefix: "/mainapi"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            host: reverseproxy
+            port:
+              number: 80
+
 
 # apiVersion: networking.k8s.io/v1
 # kind: Ingress
