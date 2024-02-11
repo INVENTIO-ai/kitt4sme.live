@@ -167,10 +167,12 @@ spec:
   selector:
     app: reverseproxy 
   ports:
-    - protocol: TCP
+    - name: httpproxy
+      protocol: TCP
       port: 80
       targetPort: 80 
-    - protocol: TCP  # base mqtt
+    - name: mqttproxy
+      protocol: TCP  # base mqtt
       port: 81
       targetPort: 81  
 
