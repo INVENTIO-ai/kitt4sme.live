@@ -29,8 +29,6 @@ spec:
   - maingui-gateway
   http:
   - match:
-    # - uri:
-    #     prefix: "/mainapi"
     - uri:
         prefix: "/mainapi/"
     rewrite:
@@ -49,7 +47,6 @@ spec:
         host: localbroker
         port:
           number: 8000
-    #websocketUpgrade: true # enable upgrade to WebSocket
     
   - match:
     - uri:
@@ -68,7 +65,6 @@ spec:
         host: node-red
         port:
           number: 34123
-    #websocketUpgrade: true  # enable upgrade to WebSocket
 
   - match:
     - uri:
@@ -121,8 +117,6 @@ spec:
   - licencegui-gateway
   http:
   - match:
-    # - uri:
-    #     prefix: "/licenceapi"
     - uri:
         prefix: "/licenceapi/"
     rewrite:
@@ -141,8 +135,6 @@ spec:
         host: licence-manager-api
         port:
           number: 5003
-    #websocketUpgrade: true # Abilita l'upgrade a WebSocket per questo percorso
-
 
   - match:
     - uri:
@@ -153,8 +145,8 @@ spec:
         port:
           number: 80
 
-
 ## ------------ licence gui end 
+
 ---
 
 ## ------------ internal reverse proxy
@@ -172,7 +164,7 @@ spec:
       port: 80
       targetPort: 80 
     - name: mqttproxy
-      protocol: TCP  # base mqtt
+      protocol: TCP
       port: 81
       targetPort: 81  
 
@@ -184,11 +176,9 @@ metadata:
   name: reverseproxy-virtual-service
 spec:
   hosts:
-    - reverseproxy # Usa il nome del servizio interno `mainapiinternal`
+    - reverseproxy
   http:
   - match:
-    # - uri:
-    #     prefix: "/mainapi"
     - uri:
         prefix: "/mainapi/"
     rewrite:
@@ -206,8 +196,7 @@ spec:
         host: localbroker
         port:
           number: 8000
-    #websocketUpgrade: true # enable upgrade to WebSocket
-    
+  
   - match:
     - uri:
         prefix: "/node-red"
@@ -225,7 +214,6 @@ spec:
         host: node-red
         port:
           number: 34123
-    #websocketUpgrade: true  # enable upgrade to WebSocket
 
   - match:
     - uri:
