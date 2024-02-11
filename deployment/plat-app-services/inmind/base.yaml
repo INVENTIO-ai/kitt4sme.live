@@ -222,9 +222,9 @@ spec:
           number: 34123
     #websocketUpgrade: true  # enable upgrade to WebSocket
 
-  - tester:
+  - match:
     - uri:
-        prefix: "/node-red"
+        prefix: "/tester"
     route:
     - destination:
         host: node-red
