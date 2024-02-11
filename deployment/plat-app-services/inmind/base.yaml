@@ -193,6 +193,45 @@ spec:
         host: mainapi
         port:
           number: 5001
+
+  - match:
+    - uri:
+        prefix: "/mqtt"
+    route:
+    - destination:
+        host: localbroker
+        port:
+          number: 8000
+    websocketUpgrade: true # Abilita l'upgrade a WebSocket per questo percorso
+    
+  - match:
+    - uri:
+        prefix: "/node-red"
+    route:
+    - destination:
+        host: node-red
+        port:
+          number: 1880
+
+  - match:
+    - uri:
+        prefix: "/wsext"
+    route:
+    - destination:
+        host: node-red
+        port:
+          number: 34123
+    websocketUpgrade: true # Abilita l'upgrade a WebSocket per questo percorso
+
+  - tester:
+    - uri:
+        prefix: "/node-red"
+    route:
+    - destination:
+        host: node-red
+        port:
+          number: 1880
+
   - match:
     - uri:
         prefix: "/"
