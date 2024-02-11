@@ -9,7 +9,7 @@ spec:
   ports:
   - port: 80
     targetPort: 80
-    nodePort: 35340
+    #nodePort: 35340
     #protocol: TCP
     name: httplicence
   selector:
