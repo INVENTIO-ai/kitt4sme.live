@@ -184,6 +184,8 @@ spec:
   - match:
     - uri:
         prefix: "/mainapi"
+    - uri:
+        prefix: "/mainapi/"
     rewrite:
       uri: "/"
     route:
