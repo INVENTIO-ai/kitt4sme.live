@@ -1,158 +1,5 @@
 
-# apiVersion: v1
-# kind: ConfigMap
-# metadata:
-#   name: nginx-config
-# data:
-#   nginx.conf: |
-#     user nginx;
-#     worker_processes auto;
-#     error_log /var/log/nginx/error.log debug; # Imposta il livello di log su debug per gli errori
-#     pid /var/run/nginx.pid;
-
-#     events {
-#         worker_connections 1024;
-#     }
-
-#     http {
-#         log_format main '$remote_addr - $remote_user [$time_local] "$request" '
-#                     '$status $body_bytes_sent "$http_referer" '
-#                     '"$http_user_agent" "$http_x_forwarded_for"';
-    
-#         access_log /var/log/nginx/access.log main;
-
-#         server {
-#             client_max_body_size        20000M;
-#             proxy_connect_timeout       600;
-#             proxy_send_timeout          600;
-#             proxy_read_timeout          600;
-#             send_timeout                600;
-
-#             listen 80;
-
-
-#             location /mqtt
-#             {
-#                 proxy_http_version 1.1;
-#                 proxy_set_header Upgrade $http_upgrade;
-#                 proxy_set_header Connection "upgrade";
-#                 proxy_set_header Host $host;
-
-#                 proxy_pass http://localbroker:8000;
-#             }
-
-#             location /wsext
-#             {
-#                 proxy_http_version 1.1;
-#                 proxy_set_header Upgrade $http_upgrade;
-#                 proxy_set_header Connection "upgrade";
-#                 proxy_set_header Host $host;
-
-#                 proxy_pass http://node-red:34123;
-#             }
-
-#             location  /node-red  {
-#                 proxy_set_header Host $http_host;
-#                 proxy_set_header X-Real-IP $remote_addr;
-#                 proxy_http_version 1.1;
-#                 proxy_set_header Upgrade $http_upgrade;
-#                 proxy_set_header Connection "upgrade";
-#                 proxy_pass http://node-red:1880;
-#             }
-
-#             location '/.well-known/acme-challenge' {
-#                 root /var/www/html;
-#             }
-
-#             location /mainapi2 {
-#                 rewrite ^/mainapi2?(.*) /$1 break;
-
-#                 proxy_set_header Host $http_host;
-#                 proxy_set_header X-Real-IP $remote_addr;
-#                 proxy_http_version 1.1;
-#                 proxy_set_header Upgrade $http_upgrade;
-#                 proxy_set_header Connection "upgrade";
-
-#                 proxy_pass http://mainapi:5001;
-#             }
-
-#             location /serversdata/ {
-#                 alias /serversdata;
-#                 try_files $uri $uri/ =404;
-#                 add_header Cache-Control 'public';
-#                 add_header Access-Control-Allow-Origin *;
-#                 if_modified_since off;
-#                 expires off;
-#                 etag off;
-#             }
-
-#             location / {
-#                 try_files $uri $uri/ =404;
-#                 proxy_http_version 1.1;
-#                 proxy_set_header Upgrade $http_upgrade;
-#                 proxy_set_header Connection "upgrade";
-#                 proxy_set_header X-Real-IP $remote_addr;
-#                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#                 proxy_set_header Host $http_host;
-#                 proxy_set_header X-NginX-Proxy true;
-#                 proxy_pass http://maingui:80;
-#             }
-#         }
-#     }
-
-# ---
-
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: reverseproxy
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: reverseproxy
-#   template:
-#     metadata:
-#       labels:
-#         app: reverseproxy
-#     spec:
-#       containers:
-#       - name: nginx
-#         image: nginx:latest
-#         ports:
-#         - containerPort: 80
-#         volumeMounts:
-#         - name: nginx-config
-#           mountPath: /etc/nginx/nginx.conf
-#           subPath: nginx.conf
-#         - name: data-volume
-#           mountPath: /serversdata
-#           subPath: Storage
-#       volumes:
-#       - name: nginx-config
-#         configMap:
-#           name: nginx-config
-#       - name: data-volume
-#         persistentVolumeClaim:
-#           claimName: data-volume
-
-# ---
-
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: reverseproxy
-# spec:
-#   type: NodePort
-#   ports:
-#   - port: 80
-#     targetPort: 80
-#     nodePort: 35332
-#   selector:
-#     app: reverseproxy
-
-
-# ---
+## ------------ main gui
 
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
@@ -164,13 +11,13 @@ spec:
   servers:
   - port:
       number: 35332
-      name: custom-port
+      name: maingui-port
       protocol: HTTP
     hosts:
     - "*"
 
-
 ---
+
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -202,7 +49,7 @@ spec:
         host: localbroker
         port:
           number: 8000
-    websocketUpgrade: true # Abilita l'upgrade a WebSocket per questo percorso
+    websocketUpgrade: true # enable upgrade to WebSocket
     
   - match:
     - uri:
@@ -221,7 +68,7 @@ spec:
         host: node-red
         port:
           number: 34123
-    websocketUpgrade: true # Abilita l'upgrade a WebSocket per questo percorso
+    websocketUpgrade: true  # enable upgrade to WebSocket
 
   - tester:
     - uri:
@@ -241,7 +88,76 @@ spec:
         port:
           number: 80
 
+## ------------ main gui end
+
 ---
+
+## ------------ licence gui
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: licencegui-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 35340
+      name: licencegui-port
+      protocol: HTTP
+    hosts:
+    - "*"
+
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: licencegui-virtual-service
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - licencegui-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/licenceapi"
+    - uri:
+        prefix: "/licenceapi/"
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: licence-manager-api
+        port:
+          number: 5002
+
+  - match:
+    - uri:
+        prefix: "/wslicenceapi"
+    route:
+    - destination:
+        host: licence-manager-api
+        port:
+          number: 5003
+    websocketUpgrade: true # Abilita l'upgrade a WebSocket per questo percorso
+
+
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: licence-manager-gui
+        port:
+          number: 80
+
+
+## ------------ licence gui end 
+---
+
+## ------------ internal reverse proxy
 
 apiVersion: v1
 kind: Service
@@ -264,15 +180,65 @@ spec:
   hosts:
     - reverseproxy # Usa il nome del servizio interno `mainapiinternal`
   http:
-    - match:
-        - uri:
-            prefix: "/mainapi"
-      rewrite:
-        uri: "/" # Rimuovi il prefisso `/mainapi` dall'URL
-      route:
-        - destination:
-            host: mainapi # Il nome del servizio di destinazione
-            port:
-              number: 5001 # La porta del servizio di destinazione
+  - match:
+    - uri:
+        prefix: "/mainapi"
+    - uri:
+        prefix: "/mainapi/"
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: mainapi
+        port:
+          number: 5001
 
+  - match:
+    - uri:
+        prefix: "/mqtt"
+    route:
+    - destination:
+        host: localbroker
+        port:
+          number: 8000
+    websocketUpgrade: true # enable upgrade to WebSocket
+    
+  - match:
+    - uri:
+        prefix: "/node-red"
+    route:
+    - destination:
+        host: node-red
+        port:
+          number: 1880
+
+  - match:
+    - uri:
+        prefix: "/wsext"
+    route:
+    - destination:
+        host: node-red
+        port:
+          number: 34123
+    websocketUpgrade: true  # enable upgrade to WebSocket
+
+  - tester:
+    - uri:
+        prefix: "/node-red"
+    route:
+    - destination:
+        host: node-red
+        port:
+          number: 1880
+
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: maingui
+        port:
+          number: 80
+
+## ------------ internal reverse proxy end
 
