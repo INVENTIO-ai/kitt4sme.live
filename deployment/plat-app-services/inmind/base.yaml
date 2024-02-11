@@ -165,13 +165,17 @@ metadata:
   name: reverseproxy
 spec:
   selector:
-    app: reverseproxy # Assicurati che questo corrisponda ai selettori dei pod del servizio `mainapi`
+    app: reverseproxy 
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80 # Supponendo che i pod `mainapi` ascoltino su questa porta per il traffico interno
+      targetPort: 80 
+    - protocol: TCP  # base mqtt
+      port: 81
+      targetPort: 81  
 
 ---
+
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -192,7 +196,6 @@ spec:
         host: mainapi
         port:
           number: 5001
-
   - match:
     - uri:
         prefix: "/mqtt"
@@ -239,6 +242,15 @@ spec:
         host: maingui
         port:
           number: 80
+
+  tcp:
+    - match:
+        - port: 81
+      route:
+        - destination:
+            host: localbroker
+            port:
+              number: 1883
 
 ## ------------ internal reverse proxy end
 

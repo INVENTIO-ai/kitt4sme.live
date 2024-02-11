@@ -39,6 +39,7 @@ spec:
         - name: my-registry-secret
       containers:
       - name: licence-manager-gui
+        imagePullPolicy: Always
         image: inventio.azurecr.io/edge-licence-manager/reverseproxy-gui-x86:dev
         ports:
         - containerPort: 80
