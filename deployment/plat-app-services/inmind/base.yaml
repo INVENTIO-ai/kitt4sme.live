@@ -157,7 +157,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: custom-gateway
+  name: maingui-gateway
 spec:
   selector:
     istio: ingressgateway
@@ -174,12 +174,12 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: reverseproxy-virtual-service
+  name: maingui-virtual-service
 spec:
   hosts:
   - "*"
   gateways:
-  - custom-gateway
+  - maingui-gateway
   http:
   - match:
     - uri:
@@ -207,10 +207,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mainapiinternal
+  name: reverseproxy
 spec:
   selector:
-    app: mainapiinternal # Assicurati che questo corrisponda ai selettori dei pod del servizio `mainapi`
+    app: reverseproxy # Assicurati che questo corrisponda ai selettori dei pod del servizio `mainapi`
   ports:
     - protocol: TCP
       port: 80
@@ -220,10 +220,10 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: mainapiinternal-virtual-service
+  name: reverseproxy-virtual-service
 spec:
   hosts:
-    - mainapiinternal # Usa il nome del servizio interno `mainapiinternal`
+    - reverseproxy # Usa il nome del servizio interno `mainapiinternal`
   http:
     - match:
         - uri:
