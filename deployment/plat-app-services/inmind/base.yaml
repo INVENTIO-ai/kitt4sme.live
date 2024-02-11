@@ -163,7 +163,7 @@ spec:
     istio: ingressgateway
   servers:
   - port:
-      number: 35341
+      number: 35332
       name: custom-port
       protocol: HTTP
     hosts:
