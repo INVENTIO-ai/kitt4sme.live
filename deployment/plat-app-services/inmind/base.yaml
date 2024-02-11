@@ -29,8 +29,8 @@ spec:
   - maingui-gateway
   http:
   - match:
-    - uri:
-        prefix: "/mainapi"
+    # - uri:
+    #     prefix: "/mainapi"
     - uri:
         prefix: "/mainapi/"
     rewrite:
@@ -121,8 +121,8 @@ spec:
   - licencegui-gateway
   http:
   - match:
-    - uri:
-        prefix: "/licenceapi"
+    # - uri:
+    #     prefix: "/licenceapi"
     - uri:
         prefix: "/licenceapi/"
     rewrite:
@@ -181,8 +181,8 @@ spec:
     - reverseproxy # Usa il nome del servizio interno `mainapiinternal`
   http:
   - match:
-    - uri:
-        prefix: "/mainapi"
+    # - uri:
+    #     prefix: "/mainapi"
     - uri:
         prefix: "/mainapi/"
     rewrite:
