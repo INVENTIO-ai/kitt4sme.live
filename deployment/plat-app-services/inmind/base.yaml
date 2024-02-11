@@ -169,27 +169,27 @@ spec:
     hosts:
     - "*"
 
----
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: mainapi-virtual-service
-spec:
-  hosts:
-  - "*"
-  gateways:
-  - custom-gateway
-  http:
-  - match:
-    - uri:
-        prefix: "/mainapi"
-    rewrite:
-      uri: "/"
-    route:
-    - destination:
-        host: mainapi
-        port:
-          number: 5001
+# ---
+# apiVersion: networking.istio.io/v1beta1
+# kind: VirtualService
+# metadata:
+#   name: mainapi-virtual-service
+# spec:
+#   hosts:
+#   - "*"
+#   gateways:
+#   - custom-gateway
+#   http:
+#   - match:
+#     - uri:
+#         prefix: "/mainapi"
+#     rewrite:
+#       uri: "/"
+#     route:
+#     - destination:
+#         host: mainapi
+#         port:
+#           number: 5001
 
 ---
 apiVersion: networking.istio.io/v1beta1
