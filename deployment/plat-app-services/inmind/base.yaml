@@ -49,7 +49,7 @@ spec:
         host: localbroker
         port:
           number: 8000
-    websocketUpgrade: true # enable upgrade to WebSocket
+    #websocketUpgrade: true # enable upgrade to WebSocket
     
   - match:
     - uri:
@@ -68,7 +68,7 @@ spec:
         host: node-red
         port:
           number: 34123
-    websocketUpgrade: true  # enable upgrade to WebSocket
+    #websocketUpgrade: true  # enable upgrade to WebSocket
 
   - tester:
     - uri:
@@ -141,7 +141,7 @@ spec:
         host: licence-manager-api
         port:
           number: 5003
-    websocketUpgrade: true # Abilita l'upgrade a WebSocket per questo percorso
+    #websocketUpgrade: true # Abilita l'upgrade a WebSocket per questo percorso
 
 
   - match:
@@ -201,7 +201,7 @@ spec:
         host: localbroker
         port:
           number: 8000
-    websocketUpgrade: true # enable upgrade to WebSocket
+    #websocketUpgrade: true # enable upgrade to WebSocket
     
   - match:
     - uri:
@@ -220,7 +220,7 @@ spec:
         host: node-red
         port:
           number: 34123
-    websocketUpgrade: true  # enable upgrade to WebSocket
+    #websocketUpgrade: true  # enable upgrade to WebSocket
 
   - tester:
     - uri:
